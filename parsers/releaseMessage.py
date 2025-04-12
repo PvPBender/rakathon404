@@ -4,9 +4,7 @@ from User import User
 import re
 import regex as rx
 
-BASE_PATH = os.getcwd() + "/data/DATA/PAC/AMBULATNÍ ZPRÁVA"
-
-MAX_DOC_LENGTH = 100 # max(enumerate([len(u.doctor) for u in parsedUsers]), key=lambda x: x[1])[0]
+BASE_PATH = os.getcwd() + "/data/DATA/PAC/PROPOUŠTĚCÍ ZPRÁVA"
 
 def parseReport(msg: str) -> User | None:
     """
@@ -14,25 +12,11 @@ def parseReport(msg: str) -> User | None:
     """
     u = None
     try:
-        lines = msg.splitlines()
-        if len(lines) == 1:
-            print("Empty entry for:", msg.strip())
-            return None
-        
-        if len(lines) < 3:
-            u = parseHeader(lines[0])
-            if len(lines[1]) < MAX_DOC_LENGTH:
-                u.set("doctor", lines[1])
-            else:
-                u.set("body", lines[1])    
-            return u
-        
-        [info, doc, *lines] = lines
+        [info, _, reason, *lines] = msg.splitlines()
+
         u = parseHeader(info)
-        if len(doc) < MAX_DOC_LENGTH:
-            u.set("doctor", doc)
-        else:
-            lines.insert(0, doc)
+        u.set("acceptReason", reason)
+
 
         body = "\n".join(lines)
         u.set("body", body)
@@ -51,7 +35,7 @@ def parseReport(msg: str) -> User | None:
 
 
 
-def parseFile(file: str, fileName: str) -> list[User]:
+def parseFile(file: str) -> list[User]:
     """
     Parses a single file of reports
     """
@@ -59,7 +43,6 @@ def parseFile(file: str, fileName: str) -> list[User]:
     users: list[User] = []
     for report in msgs:
         if user := parseReport(report):
-            user.set("file", fileName)
             users.append(user)
         
     return users
@@ -72,7 +55,7 @@ def parse():
         for file in os.listdir(dir):
             print("Parsing", file)
             data = readFile(dir + file)
-            parsed = parseFile(data, file)
+            parsed = parseFile(data)
             users.extend(parsed)
 
     return users
@@ -82,5 +65,6 @@ def parse():
 
 if __name__ == "__main__":
     parsedUsers = parse()
+    
     print(parsedUsers[0], len(parsedUsers))
 
