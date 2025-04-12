@@ -2,6 +2,7 @@ import os
 import pandas as pd
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+BASE_PATH = os.getcwd() + "/data/DATA/LAB_" # years gets filled in
 
 
 def parseFile(file: str) -> pd.DataFrame:
@@ -61,12 +62,12 @@ def parse() -> pd.DataFrame:
     
     parsed_bio = pd.DataFrame()
     for year in [23, 24]:
-        dir = PROJECT_ROOT + f"/DATA/DATA/LAB_{year}/"
+        dir = BASE_PATH + str(year)
         for file in os.listdir(dir):
             print(f"Parsing file: {file}")
             if file.startswith("BIO") and file.endswith(".csv"):
-                df = parseFile(dir + file)
-                parsed_bio= pd.concat([parsed_bio, df])
+                df = parseFile(os.path.join(dir, file))
+                parsed_bio = pd.concat([parsed_bio, df])
 
                 
     df = df.dropna(axis=1, how='all')

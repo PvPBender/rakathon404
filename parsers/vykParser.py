@@ -1,10 +1,9 @@
-import logging
-import os
 from pathlib import Path
-
-import numpy as np
 import pandas as pd
+import numpy as np
+import logging
 import requests
+import os
 
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
 

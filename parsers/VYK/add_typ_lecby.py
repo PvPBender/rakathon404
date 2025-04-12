@@ -1,6 +1,6 @@
+import pandas as pd
 import logging
 import os
-import pandas as pd
 
 
 def annotate_vykony_with_names(vykony_csv_or_df, kod_ciselnik,

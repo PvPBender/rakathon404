@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 import os
 import pandas as pd
-from parsers.utils import readFile
+from parsers.utils import readFile, pathTo
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
-OUTPUT_PATH = os.getcwd() + '/parsers/parsed/PAT'
-BASE_PATH = os.getcwd() + "/data/DATA/PAT/"
+OUTPUT_PATH = pathTo('parsers/parsed/PAT')
+BASE_PATH = pathTo("data/DATA/PAT/")
 
 NUM_COLS = 22  # We expect 22 columns => 21 commas
 
