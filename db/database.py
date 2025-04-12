@@ -7,7 +7,7 @@ load_dotenv()
 
 
 
-engine = create_engine(f"mysql+mysqlconnector://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@{os.getenv("DB_HOST")}/{os.getenv("DB_NAME")}", echo=True)
+engine = create_engine(f"mysql+mysqlconnector://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@{os.getenv("DB_HOST")}/{os.getenv("DB_NAME")}", echo=False)
 
 def connect() -> Tuple[Connection, Engine]:
     """Connect to the database."""

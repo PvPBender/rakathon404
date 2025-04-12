@@ -13,7 +13,7 @@ class Gender(enum.Enum):
 class Pacient(Base):
     __tablename__ = "Pacient"
 
-    id: Mapped[int] = mapped_column(primary_key=True, unique=True)
+    id: Mapped[int] = mapped_column(primary_key=True, unique=True, autoincrement=False)
     year: Mapped[int] = mapped_column(Text, nullable=True)  # "ROK"
     gender: Mapped[Gender] = mapped_column(Enum(Gender), nullable=True)  # "POHLAVI"
 
@@ -24,4 +24,4 @@ class Pacient(Base):
 
 
     def __repr__(self) -> str:
-        return f"Pacient(ID={self.id!r}, year={self.year!r}, sex={self.gender!r})"
+        return f"Pacient(id={self.id!r}, year={self.year!r}, sex={self.gender!r})"
