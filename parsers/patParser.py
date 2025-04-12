@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-
 import os
 import pandas as pd
-import re
-from .utils import readFile
+from parsers.utils import readFile
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 OUTPUT_PATH = os.getcwd() + '/parsers/parsed/PAT'
 BASE_PATH = os.getcwd() + "/data/DATA/PAT/"
@@ -73,7 +71,7 @@ def parse_csv_char_by_char(data, expected_num_cols):
 
     return rows
 
-def parseFile(file: str, fileName: str):
+def parseFile(file: str, fileName: str | None):
     """
     Parses all files that are for this parser and returns a list of parsed data
     It should use parseFile to parse each file to avoid code duplication
@@ -135,7 +133,7 @@ def parseFile(file: str, fileName: str):
         df["TEXT"] = df["TEXT"].str.replace(r'[\r\n\u2028\u2029]+', ' ', regex=True)
         df["TEXT"] = df["TEXT"].str.replace(r'[\r\n\u2028\u2029\x00-\x1F\x7F-\x9F\t]+', ' ', regex=True)
 
-    outPath = os.path.join(OUTPUT_PATH, fileName.removeprefix("$"))
+    outPath = os.path.join(OUTPUT_PATH, os.path.basename(file).removeprefix("$"))
     df.to_csv(outPath, index=False, encoding='utf-8')
     print(f"\nParsed {len(df)} rows. Saved parsed data to: {outPath}")
 
@@ -152,13 +150,12 @@ def parse():
         df = parseFile(os.path.join(BASE_PATH, file), file)
         entries.append(df)
 
-
 if __name__ == "__main__":
-    try:
-        df = parseFile(BASE_PATH, "PATOL202504101802.csv")
-        print(f"Reading file from: {BASE_PATH}")
-        print(df.head(12))
-        print("\nDataFrame Info:")
-        print(df.info())
-    except Exception as e:
-        print("Error parsing:", e)
+    # try:
+    df = parseFile(os.path.join(BASE_PATH, "$PATOL202504101802.csv"), None)
+    print(f"Reading file from: {BASE_PATH}")
+    print(df.head(12))
+    print("\nDataFrame Info:")
+    print(df.info())
+    # except Exception as e:
+    #     print("Error parsing:", e)

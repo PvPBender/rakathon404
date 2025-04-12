@@ -1,6 +1,6 @@
 import os
-from utils import readFile, parseHeader
-from User import User
+from parsers.utils import readFile, parseHeader
+from parsers.User import User
 import re
 import regex as rx
 
@@ -51,7 +51,7 @@ def parseReport(msg: str) -> User | None:
 
 
 
-def parseFile(file: str, fileName: str) -> list[User]:
+def parseFile(file: str, fileName: str | None) -> list[User]:
     """
     Parses a single file of reports and returns a list of parsed data
     """
@@ -59,7 +59,8 @@ def parseFile(file: str, fileName: str) -> list[User]:
     users: list[User] = []
     for report in msgs:
         if user := parseReport(report):
-            user.set("file", fileName)
+            if fileName:
+                user.set("file", fileName)
             users.append(user)
         
     return users

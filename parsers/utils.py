@@ -1,5 +1,5 @@
 import re
-from User import User
+from parsers.User import User
 
 def readFile(path):
     """
