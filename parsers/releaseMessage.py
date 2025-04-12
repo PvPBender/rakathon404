@@ -1,10 +1,10 @@
 import os
-from parsers.utils import readFile, parseHeader
+from parsers.utils import readFile, parseHeader, pathTo
 from parsers.User import User
 import re
 import regex as rx
 
-BASE_PATH = os.getcwd() + "/data/DATA/PAC/PROPOUŠTĚCÍ ZPRÁVA"
+BASE_PATH = pathTo("/data/DATA/PAC/PROPOUŠTĚCÍ ZPRÁVA")
 
 def parseReport(msg: str) -> User | None:
     """

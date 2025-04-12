@@ -1,5 +1,6 @@
 import re
 from parsers.User import User
+from pathlib import Path
 
 def readFile(path):
     """
@@ -22,3 +23,14 @@ def parseHeader(header: str) -> User | None:
     u.set("temp", header)
 
     return u
+
+def projectRoot() -> Path:
+    current_dir = Path(__file__).resolve()
+    project_root = current_dir.parents[1]
+    return project_root
+
+def pathTo(*paths) -> Path:
+    """
+    Joins the given paths to the project root directory.
+    """
+    return projectRoot().joinpath(*paths)
