@@ -2,12 +2,16 @@
 
 import os
 import pandas as pd
+import datetime  # Add this import for timestamp
 
 # Updated paths for RTG data
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..')) # Adjust PROJECT_ROOT to point to rakathon404
 BASE_PATH = os.path.join(PROJECT_ROOT, 'data', 'DATA', 'RTG', '$Rentgen202504101118.csv')
 RTG_DATA_DIR = os.path.join(PROJECT_ROOT, 'data', 'DATA', 'RTG', 'Data') # Directory containing the .data files
-OUTPUT_PATH = os.path.join(PROJECT_ROOT, 'data', 'DATA', 'RTG', 'rtgParsed.csv') # Output within parsers/RTG
+
+# Generate timestamp for the output file
+timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+OUTPUT_PATH = os.path.join(PROJECT_ROOT, 'data', 'DATA', 'RTG', f'rtgParsed_{timestamp}.csv') # Output with timestamp
 
 def read_data_file(file_path_in_col):
     """
