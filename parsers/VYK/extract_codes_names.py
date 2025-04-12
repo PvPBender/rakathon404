@@ -13,7 +13,7 @@ logging.basicConfig(
     ]
 )
 
-file_path = "../../data/Vyhlaska.xlsx"
+file_path = "Vyhlaska.xlsx"
 output_path = "vykony_kody_nazvy.csv"
 
 # Ensure output directory exists

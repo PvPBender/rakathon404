@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+import os
 import numpy as np
 from pathlib import Path
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
@@ -9,6 +10,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
+
 def get_data_paths(year):
     current_dir = Path(__file__).resolve().parent
     project_root = current_dir.parents[1]  # Správně: rakathon404/
@@ -17,7 +19,6 @@ def get_data_paths(year):
     vykony_path = base_path / f"vyk_{year}_vykony.csv"
     vykpac_path = base_path / f"vyk_{year}_vykpac.csv"
     return material_path, vykony_path, vykpac_path
-
 
 
 def load_and_prepare_data(year):
@@ -32,14 +33,16 @@ def load_and_prepare_data(year):
         df_material = None
 
     try:
-        df_vykony = pd.read_csv(vykony_path, sep=";", encoding="cp1250", low_memory=False)
+        df_vykony = pd.read_csv(vykony_path, sep=";", encoding="cp1250",
+                                low_memory=False)
         logging.info(f"[{year}] Soubor 'vykony' načten: {df_vykony.shape}")
     except Exception as e:
         logging.error(f"[{year}] Chyba při načítání vykony: {e}")
         df_vykony = None
 
     try:
-        df_vykpac = pd.read_csv(vykpac_path, sep=";", encoding="cp1250", low_memory=False)
+        df_vykpac = pd.read_csv(vykpac_path, sep=";", encoding="cp1250",
+                                low_memory=False)
         logging.info(f"[{year}] Soubor 'vykpac' načten: {df_vykpac.shape}")
     except Exception as e:
         logging.error(f"[{year}] Chyba při načítání vykpac: {e}")
@@ -59,10 +62,12 @@ def load_and_prepare_data(year):
 
     for name, df in zip(["material", "vykony"], [df_material, df_vykony]):
         if df is not None:
-            df["DATUM"] = pd.to_datetime(df["DATUM"], dayfirst=True, errors="coerce")
+            df["DATUM"] = pd.to_datetime(df["DATUM"], dayfirst=True,
+                                         errors="coerce")
             n_missing = df["DATUM"].isna().sum()
             if n_missing > 0:
-                logging.warning(f"[{year}] {name}: {n_missing} hodnot DATUM nebylo možné převést.")
+                logging.warning(
+                    f"[{year}] {name}: {n_missing} hodnot DATUM nebylo možné převést.")
 
     def auto_convert_object_columns(df, name=""):
         logging.info(f"[{year}] Převádím object sloupce v tabulce '{name}'...")
@@ -109,7 +114,8 @@ def load_and_prepare_data(year):
 
 
 def drop_empty_columns(df, name):
-    null_equivalents = ["", " ", "  ", "<null>", "NULL", "N/A", "n/a", "None", "nan", "NaN"]
+    null_equivalents = ["", " ", "  ", "<null>", "NULL", "N/A", "n/a", "None",
+                        "nan", "NaN"]
     df_cleaned = df.replace(null_equivalents, np.nan).infer_objects(copy=False)
     n_cols_before = df.shape[1]
     df_cleaned = df_cleaned.dropna(axis=1, how="all")
@@ -118,7 +124,7 @@ def drop_empty_columns(df, name):
     return df_cleaned
 
 
-# === Hlavní část ===
+# === main ===
 
 df_vykony_23, df_material_23 = load_and_prepare_data(23)
 df_vykony_24, df_material_24 = load_and_prepare_data(24)
@@ -129,7 +135,14 @@ df_material_23 = drop_empty_columns(df_material_23, "material_23")
 df_material_24 = drop_empty_columns(df_material_24, "material_24")
 
 df_vykony_all = pd.concat([df_vykony_23, df_vykony_24], ignore_index=True)
-df_material_all = pd.concat([df_material_23, df_material_24], ignore_index=True)
+df_material_all = pd.concat([df_material_23, df_material_24],
+                            ignore_index=True)
 
-df_vykony_all = annotate_vykony_with_names(df_vykony_all)
-df_material_all = annotate_vykony_with_names(df_material_all)
+
+
+df_vykony_annotated = annotate_vykony_with_names(
+    vykony_csv_or_df=df_vykony_all,
+    kod_ciselnik="vykony_kody_nazvy.csv",
+    output_csv="vykony_annotated.csv"
+)
+
