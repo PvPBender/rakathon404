@@ -28,28 +28,28 @@ def get_data_paths(year):
 def load_and_prepare_data(year):
     material_path, vykony_path, vykpac_path = get_data_paths(year)
 
-    logging.info(f"[{year}] Načítám soubory...")
+    logging.info(f"[{year}] Loading files...")
     try:
         df_material = pd.read_csv(material_path, sep=";", encoding="cp1250")
-        logging.info(f"[{year}] Soubor 'material' načten: {df_material.shape}")
+        logging.info(f"[{year}] File 'material' loaded: {df_material.shape}")
     except Exception as e:
-        logging.error(f"[{year}] Chyba při načítání material: {e}")
+        logging.error(f"[{year}] Error while loading 'material': {e}")
         df_material = None
 
     try:
         df_vykony = pd.read_csv(vykony_path, sep=";", encoding="cp1250",
                                 low_memory=False)
-        logging.info(f"[{year}] Soubor 'vykony' načten: {df_vykony.shape}")
+        logging.info(f"[{year}] File 'vykony' loaded: {df_vykony.shape}")
     except Exception as e:
-        logging.error(f"[{year}] Chyba při načítání vykony: {e}")
+        logging.error(f"[{year}] Error while loading 'vykony': {e}")
         df_vykony = None
 
     try:
         df_vykpac = pd.read_csv(vykpac_path, sep=";", encoding="cp1250",
                                 low_memory=False)
-        logging.info(f"[{year}] Soubor 'vykpac' načten: {df_vykpac.shape}")
+        logging.info(f"[{year}] File 'vykpac' loaded: {df_vykpac.shape}")
     except Exception as e:
-        logging.error(f"[{year}] Chyba při načítání vykpac: {e}")
+        logging.error(f"[{year}] Error while loading 'vykpac': {e}")
         df_vykpac = None
 
     def clean_ids(df, cols):
@@ -71,10 +71,10 @@ def load_and_prepare_data(year):
             n_missing = df["DATUM"].isna().sum()
             if n_missing > 0:
                 logging.warning(
-                    f"[{year}] {name}: {n_missing} hodnot DATUM nebylo možné převést.")
+                    f"[{year}] {name}: {n_missing} values of DATE could not be converted.")
 
     def auto_convert_object_columns(df, name=""):
-        logging.info(f"[{year}] Převádím object sloupce v tabulce '{name}'...")
+        logging.info(f"[{year}] Converting object columns in table '{name}'...")
         for col in df.columns:
             if df[col].dtype == "object":
                 try:
@@ -83,7 +83,7 @@ def load_and_prepare_data(year):
                         df[col] = df[col].astype(str).str.strip()
                 except Exception:
                     df[col] = df[col].astype(str).str.strip()
-        logging.info(f"[{year}] Převod dokončen pro tabulku '{name}'.")
+        logging.info(f"[{year}] Conversion completed for table '{name}'.")
 
     if df_material is not None:
         auto_convert_object_columns(df_material, "material")
@@ -136,8 +136,9 @@ OUTPUT_PATH = os.path.join(CUR_DIR, "output")  # Uprav dle potřeby
 
 def extract_codes_names_from_url_to_csv(url: str, csv_path: str) -> None:
     """
-    Stáhne Excel z URL, přečte ho a uloží jako CSV.
+    Downloads an Excel file from a URL, reads it, and saves it as a CSV.
     """
+
     response = requests.get(url)
     response.raise_for_status()
 
