@@ -1,8 +1,9 @@
 import logging
 import os
-from pathlib import Path
-
+import requests
+import pandas as pd
 import numpy as np
+from pathlib import Path
 
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
 
@@ -127,9 +128,7 @@ def drop_empty_columns(df, name):
     return df_cleaned
 
 
-import os
-import pandas as pd
-import requests
+
 
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_PATH = os.path.join(CUR_DIR, "output")  # Uprav dle potřeby
