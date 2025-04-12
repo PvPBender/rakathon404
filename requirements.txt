@@ -1,2 +1,12 @@
 openpyxl
 pandas~=2.2.3
+decorator==5.2.1
+matplotlib==3.9.2
+matplotlib-inline==0.1.7
+mysql-connector-python==9.2.0
+numpy==2.1.2
+pandas==2.2.3
+regex==2024.11.6
+SQLAlchemy==2.0.40
+fastapi==0.115.12
+fastapi-cli==0.0.7
