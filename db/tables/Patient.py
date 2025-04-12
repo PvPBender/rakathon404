@@ -1,4 +1,4 @@
-from .Base import Base
+from db.tables.Base import Base
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Enum

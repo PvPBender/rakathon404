@@ -3,7 +3,7 @@
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Integer, Date, DateTime
-from .Base import Base
+from db.tables.Base import Base
 
 class Patolog(Base):
     __tablename__ = "Patolog"

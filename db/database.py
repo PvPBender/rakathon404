@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine
 
 # Import all tables here before Base
-from .tables.Patient import Pacient
+from db.tables.Patient import Pacient
 
 
-from .tables.Base import Base
+from db.tables.Base import Base
 
 engine = create_engine("mysql+mysqlconnector://root:@localhost/onkominer", echo=True)
 

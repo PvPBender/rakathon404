@@ -2,7 +2,7 @@
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Integer, Float, DateTime
-from .Base import Base  # import your Base class
+from db.tables.Base import Base  # import your Base class
 
 class BioLab(Base):
     __tablename__ = "LabBio"
