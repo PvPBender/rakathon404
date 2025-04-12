@@ -39,32 +39,35 @@ class DiseaseWithComment:
 
 @dataclass
 class MA13:
+    # Non-default fields first
     M_A_1_3_1: str  # Srdce a cévy
-    M_A_1_3_1_1: Optional[str] = None  # Srdce a cévy - komentář
     M_A_1_3_2: str  # Metabolické
-    M_A_1_3_2_1: Optional[str] = None  # Metabolické - komentář
     M_A_1_3_3: str  # Plicní
-    M_A_1_3_3_1: Optional[str] = None  # Plicní - komentář
     M_A_1_3_4: str  # GIT
-    M_A_1_3_4_1: Optional[str] = None  # GIT - komentář
     M_A_1_3_5: str  # Ledviny
-    M_A_1_3_5_1: Optional[str] = None  # Ledviny - komentář
     M_A_1_3_6: str  # Autoimunitní
-    M_A_1_3_6_1: Optional[str] = None  # Autoimunitní - komentář
     M_A_1_3_7: str  # Závažné endokrinologické onemocnění
-    M_A_1_3_7_1: Optional[str] = None  # Závažné endokrinologické onemocnění - komentář
     M_A_1_3_8: str  # Neuropsychiatrické onemocnění
-    M_A_1_3_8_1: Optional[str] = None  # Neuropsychiatrické onemocnění - komentář
     M_A_1_3_9: str  # Gynekologické onemocnění + anamnéza
+    M_A_1_3_10: str  # Závažné infekční onemocnění
+    M_A_1_3_11: AnoNeUdaje  # Orgánová transplantace		ANO/NE/údaj není k dispozici
+    M_A_1_3_11_1: List[str]  # Organ
+
+    # Default fields after
+    M_A_1_3_1_1: Optional[str] = None  # Srdce a cévy - komentář
+    M_A_1_3_2_1: Optional[str] = None  # Metabolické - komentář
+    M_A_1_3_3_1: Optional[str] = None  # Plicní - komentář
+    M_A_1_3_4_1: Optional[str] = None  # GIT - komentář
+    M_A_1_3_5_1: Optional[str] = None  # Ledviny - komentář
+    M_A_1_3_6_1: Optional[str] = None  # Autoimunitní - komentář
+    M_A_1_3_7_1: Optional[str] = None  # Závažné endokrinologické onemocnění - komentář
+    M_A_1_3_8_1: Optional[str] = None  # Neuropsychiatrické onemocnění - komentář
     M_A_1_3_9_1: Optional[str] = None  # Onemocnění / funkční stav - komentář
     M_A_1_3_9_2: Optional[str] = None  # HPV pozitivita
     M_A_1_3_9_3: Optional[str] = None  # Menopauza (Rok)
     M_A_1_3_9_4: Optional[str] = None  # Hormonoterapie
     M_A_1_3_9_5: Optional[str] = None  # Antikoncepce
-    M_A_1_3_10: str  # Závažné infekční onemocnění
     M_A_1_3_10_1: Optional[str] = None  # Závažné infekční onemocnění - komentář
-    M_A_1_3_11: AnoNeUdaje  # Orgánová transplantace		ANO/NE/údaj není k dispozici
-    M_A_1_3_11_1: List[str]  # Organ
     M_A_1_3_11_1_1: Optional[str] = None  # Jiné organy
     M_A_1_3_11_2: Optional[str] = None  # Rok transplantace
     M_A_1_3_11_3: Optional[str] = None  # Komentář
@@ -90,36 +93,34 @@ class MA15:
 # --- M.A.1.6 ---
 @dataclass
 class MA16:
+    # Non-default fields first
     M_A_1_6_1: str  # Mamografický screening – Povinné, 1..1
-    M_A_1_6_1_1: Optional[str] = None  # Rok posledního vyšetření – Volitelné, 0..1
     M_A_1_6_2: str  # Screening nádoru děložního hrdla – Povinné, 1..1
-    M_A_1_6_2_1: Optional[str] = None  # Rok posledního vyšetření – Volitelné, 0..1
     M_A_1_6_3: str  # Screening kolorektálního karcinomu – Povinné, 1..1
+    M_A_1_6_4: str  # Plicní screening – Povinné, 1..1
+    M_A_1_6_5: str  # Screening prostaty – Povinné, 1..1
+
+    # Default fields after
+    M_A_1_6_1_1: Optional[str] = None  # Rok posledního vyšetření – Volitelné, 0..1
+    M_A_1_6_2_1: Optional[str] = None  # Rok posledního vyšetření – Volitelné, 0..1
     M_A_1_6_3_1: Optional[str] = None  # Rok posledního vyšetření – Volitelné, 0..1
     M_A_1_6_3_2: Optional[str] = None  # Forma screeningu – Volitelné, 0..1
-    M_A_1_6_4: str  # Plicní screening – Povinné, 1..1
     M_A_1_6_4_1: Optional[str] = None  # Rok posledního vyšetření – Volitelné, 0..1
-    M_A_1_6_5: str  # Screening prostaty – Povinné, 1..1
     M_A_1_6_5_1: Optional[str] = None  # Rok posledního vyšetření – Volitelné, 0..1
 
 
 # --- M.A.1.7 ---
 @dataclass
 class MA17:
+    # Non-default fields first
     M_A_1_7_1: AnoNeUdaje  # Léková alergie – Povinné, 1..1
-    M_A_1_7_1_1: Optional[str] = (
-        None  # Specifikace lékové alergie – Podmíněně povinné, 0..1
-    )
     M_A_1_7_2: AnoNeUdaje  # Alergie na jód/kontrastní látky – Povinné, 1..1
-    M_A_1_7_2_1: Optional[str] = (
-        None  # Specifikace jód/kontrast – Podmíněně povinné, 0..1
-    )
-    M_A_1_7_3: (
-        AnoNeUdaje  # Jiné alergie (např. potravinové, pyly, prach) – Povinné, 1..1
-    )
-    M_A_1_7_3_1: Optional[str] = (
-        None  # Specifikace jiných alergií – Podmíněně povinné, 0..1
-    )
+    M_A_1_7_3: AnoNeUdaje  # Jiné alergie (např. potravinové, pyly, prach) – Povinné, 1..1
+
+    # Default fields after
+    M_A_1_7_1_1: Optional[str] = None  # Specifikace lékové alergie – Podmíněně povinné, 0..1
+    M_A_1_7_2_1: Optional[str] = None  # Specifikace jód/kontrast – Podmíněně povinné, 0..1
+    M_A_1_7_3_1: Optional[str] = None  # Specifikace jiných alergií – Podmíněně povinné, 0..1
 
 
 @dataclass
@@ -150,16 +151,17 @@ class Drogovazavislost:
 # --- M.A.1.8 ---
 @dataclass
 class MA18:
+    # Non-default fields first
     M_A_1_8_1: Kurak  # Kouření – Povinné, 1..1 výběr {Aktivní kuřák, Bývalý kuřák, Pasivní kuřák, Nekuřák, údaj není k dispozici}
-    M_A_1_8_1_1: Optional[float] = (
-        None  # Počet denně vykouřených balíčků/krabiček – Podmíněně povinné, 0..1
-    )
+    M_A_1_8_2: Alkohol  # Alkohol – Povinné, 1..1 výběr {Abstinent, Příležitostní konzumace, Denní konzumace, údaj není k dispozici}
+    M_A_1_8_3: Drogovazavislost  # Drogová závislost – Povinné, 1..1 výběr {Aktuálně drogově závislý(á), Nikdy drogově závislý(á), Drogově závislý(á) v minulosti, Údaj není k dispozici}
+
+    # Default fields after
+    M_A_1_8_1_1: Optional[float] = None  # Počet denně vykouřených balíčků/krabiček – Podmíněně povinné, 0..1
     M_A_1_8_1_2: Optional[float] = None  # Počet let kouření – Podmíněně povinné, 0..1
     M_A_1_8_1_3: Optional[float] = None  # Počet balíčkoroků – Podmíněně povinné, 0..1
     M_A_1_8_1_4: Optional[str] = None  # Kouření – komentář – Volitelné, 0..1
-    M_A_1_8_2: Alkohol  # Alkohol – Povinné, 1..1 výběr {Abstinent, Příležitostní konzumace, Denní konzumace, údaj není k dispozici}
     M_A_1_8_2_1: Optional[str] = None  # Alkohol – komentář – Volitelné, 0..1
-    M_A_1_8_3: Drogovazavislost  # Drogová závislost – Povinné, 1..1 výběr {Aktuálně drogově závislý(á), Nikdy drogově závislý(á), Drogově závislý(á) v minulosti, Údaj není k dispozici}
     M_A_1_8_3_1: Optional[str] = None  # Drogová závislost – komentář – Volitelné, 0..1
 
 
@@ -210,7 +212,7 @@ class MA1:
 
 # --- Modul A ---
 @dataclass
-class ModulA:
+class PacientTemplateModuleA:
     M_A_1: MA1
     M_A_2: Optional[List[MA2]] = field(default_factory=list)
     M_A_3: Optional[List[MA3]] = field(default_factory=list)

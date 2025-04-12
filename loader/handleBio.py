@@ -1,6 +1,6 @@
 import pandas as pd
 from model.patientTemplate import PacientTemplate
-from db.tables.Patient import BioLab
+from db.tables.LabBio import BioLab
 import math
 
 """
