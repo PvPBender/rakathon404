@@ -1248,3 +1248,5 @@ class MB223:
     # ------------------ RIZIKOVÉ FAKTORY (M.B.2.23.4) ------------------
     # (Same here: the doc snippet is minimal, so we place a placeholder.)
     M_B_2_23_4_1: Optional[str] = None  # e.g. "Familiární zátěž, MEN2, etc."
+
+
