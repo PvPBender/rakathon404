@@ -4,6 +4,7 @@ import os
 import numpy as np
 from pathlib import Path
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
+from parsers.VYK.extract_codes_names import extract_codes_names
 
 logging.basicConfig(
     level=logging.INFO,
@@ -132,6 +133,11 @@ def parse() -> list[any]:
     Parses all files that are for this parser and returns a list of parsed data
     It should use parseFile to parse each file to avoid code duplication
     """
+
+
+    if not os.path.exists("vykony_kody_nazvy.csv"):
+        extract_codes_names(os.path.join(os.getcwd(), "parsers/VYK/Vyhlaska.xlsx"))
+        
     df_vykony_all = pd.DataFrame()
     df_material_all = pd.DataFrame()
 
@@ -161,4 +167,4 @@ def parse() -> list[any]:
 
 
 if __name__ == "__main__":
-    print(parse())
+    parse()
