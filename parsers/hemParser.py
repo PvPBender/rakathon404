@@ -2,9 +2,8 @@ import os
 import pandas as pd
 from parsers.utils import pathTo
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 BASE_PATH = pathTo("data/DATA") # years gets filled in
-
+OUTPUT_DIR = pathTo("data/parsed/LAB")
 
 def parseFile(file: str) -> pd.DataFrame:
     """
@@ -60,6 +59,10 @@ def parse() -> pd.DataFrame:
     "VALDESCR"
     "MACHINE"
     """
+
+    if not os.path.exists(OUTPUT_DIR):
+        os.makedirs(OUTPUT_DIR)
+        
     print("PARSING HEM DATA")
     df = pd.DataFrame()
     # parsed_bio = pd.DataFrame()
@@ -77,7 +80,7 @@ def parse() -> pd.DataFrame:
     df = df.dropna(axis=1, how='all')
     # Remove rows where CISPAC is 0, missing, or invalid
     df = df[df['CISPAC'].apply(lambda x: x.isdigit() and int(x) != 0 if pd.notnull(x) else False)]
-
+    df.to_csv(OUTPUT_DIR / "hem.csv")
     return df
 
 
