@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from db.database import connect
 
 class BioLab(Base):
-    __tablename__ = "LabBio"
+    __tablename__ = "BioLab"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, unique=True)  # "ID" as ID
     cispac: Mapped[int] = mapped_column(Integer, ForeignKey('Pacient.id'))  # "CISPAC" as ID

@@ -2,11 +2,13 @@
 from db.tables.Base import Base
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Text, Integer, DateTime, ForeignKey
+from sqlalchemy import Text, Integer, DateTime, ForeignKey, select
 
-"""
-ODDEL,CISPAC,POHLAVI,DG1,DG2,DG3,DG4,DG5,DGKOMENT,DATUM,PROODBORNOST,NALUZKUPRIM,TXT1,ODDELZPRACOVAL,POPIS,TYPSUBJEKTU,KODSUBJEKTU,PRAC,CISRTGPRAC,PRISTROJ,TXT2,POZNVYS,CISZAD1,VYSKA,HMOTNOST,VYSETRMETD,VYSLDAT,POPIS_POZNAMKA,CISPAC.1,RTG_DATA_CONTENT 
-"""
+
+import pandas as pd
+from sqlalchemy.orm import Session
+from db.database import connect, batch_insert
+
 
 class Rentgen(Base):
     __tablename__ = "Rentgen"
@@ -57,6 +59,36 @@ class Rentgen(Base):
         )
 
 
+    @classmethod
+    def insert(cls, df: pd.DataFrame):
+        if df is None or df.empty:
+            raise Exception("DataFrame is empty or None")
+        
+        con,_ = connect()
+        if con is None:
+            raise Exception("Database connection failed")
+        
+        
+        df.columns = [col.lower() for col in df.columns]
+        df['cispac'] = pd.to_numeric(df['cispac'], errors='coerce')
+        cls.insert_missing_cispac(df, con)
+
+        session = Session(con)
+        from db.tables.Pacient import Pacient
+
+        # TODO wrong, it filters by pacient id but there can be multiple
+        # new_ids = [int(id) for id in df['cispac'].unique()]
+        # existing_ids = set(
+        #     r[0] for r in session.execute(select(Pacient.id).where(Pacient.id.in_(new_ids)))
+        # )
+        #         # Filter out the IDs that already exist
+        # filtered_rows = df[df['cispac'].isin(set(new_ids) - existing_ids)]
+        # # Create the objects only for the filtered rows (those that don't already exist)
+        entries = [cls(**row.dropna().to_dict()) for _, row in df.iterrows()]
+
+
+        batch_insert(session, entries, 100, "Rentgen")
+        session.close()
 
 
 

@@ -9,7 +9,7 @@ from sqlalchemy.dialects.mysql import MEDIUMTEXT
 import pandas as pd
 from sqlalchemy.orm import Session
 
-from db.database import connect
+from db.database import connect, batch_insert
 
 class Patolog(Base):
     __tablename__ = "Patolog"
@@ -81,16 +81,8 @@ class Patolog(Base):
         entries = [cls(**row.dropna().to_dict()) for _, row in filtered_rows.iterrows()]
 
 
-
-        try:
-            session.bulk_save_objects(entries)
-            session.commit()
-            print(f"Inserted {len(entries)}/{len(new_ids)} rows into Patolog. (unique/all)")
-        except Exception as e:
-            session.rollback()
-            print("Error inserting data:", e)
-        finally:
-            session.close()
+        batch_insert(session, entries, 1000, "Patolog")
+        session.close()
 
         # for index, row in df.iterrows():
         #     pRow = cls(**row.dropna().to_dict())
