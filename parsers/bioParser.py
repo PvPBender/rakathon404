@@ -1,7 +1,8 @@
 import os
 import pandas as pd
+from parsers.utils import pathTo
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+BASE_PATH = pathTo("data/DATA") # years gets filled in
 
 
 def parseFile(file: str) -> pd.DataFrame:
@@ -58,17 +59,18 @@ def parse() -> pd.DataFrame:
     "VALDESCR"
     "MACHINE"
     """
-    
-    parsed_bio = pd.DataFrame()
+    print("PARSING BIO DATA")
+    df = pd.DataFrame()
     for year in [23, 24]:
-        dir = PROJECT_ROOT + f"/DATA/DATA/LAB_{year}/"
+        dir = BASE_PATH / f"LAB_{year}"
         for file in os.listdir(dir):
-            print(f"Parsing file: {file}")
             if file.startswith("BIO") and file.endswith(".csv"):
-                df = parseFile(dir + file)
-                parsed_bio= pd.concat([parsed_bio, df])
+                print(f"Parsing file: {file}")
+                temp_df = parseFile(dir / file)
+                df = pd.concat([df, temp_df])
+            else:
+                print(f"Skipping file: {file}")
 
-                
     df = df.dropna(axis=1, how='all')
     # Remove rows where CISPAC is 0, missing, or invalid
     df = df[df['CISPAC'].apply(lambda x: x.isdigit() and int(x) != 0 if pd.notnull(x) else False)]

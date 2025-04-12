@@ -1,7 +1,9 @@
 import os
 import pandas as pd
+from parsers.utils import pathTo
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+BASE_PATH = pathTo("data/DATA") # years gets filled in
 
 
 def parseFile(file: str) -> pd.DataFrame:
@@ -58,16 +60,18 @@ def parse() -> pd.DataFrame:
     "VALDESCR"
     "MACHINE"
     """
-
-    parsed_hem = pd.DataFrame()
+    print("PARSING HEM DATA")
+    df = pd.DataFrame()
     # parsed_bio = pd.DataFrame()
     for year in [23, 24]:
-        dir = PROJECT_ROOT + f"/DATA/DATA/LAB_{year}/"
+        dir = BASE_PATH / f"LAB_{year}"
         for file in os.listdir(dir):
-            print(f"Parsing file: {file}")
             if file.startswith("HEM") and file.endswith(".csv"):
-                df = parseFile(dir + file)
-                parsed_hem = pd.concat([parsed_hem, df])
+                print(f"Parsing file: {file}")
+                temp_df = parseFile(dir / file)
+                df = pd.concat([df, temp_df])
+            else:
+                print(f"Skipping file: {file}")
 
                 
     df = df.dropna(axis=1, how='all')
