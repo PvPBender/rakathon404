@@ -1,4 +1,5 @@
-/data
+data/
 .venv
+parsers/parsed/
 __pycache__
 .DS_Store
