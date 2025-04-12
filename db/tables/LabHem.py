@@ -1,8 +1,12 @@
 # LabHem.py
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Text, Integer, Float, DateTime, ForeignKey
+from sqlalchemy import String, Text, Integer, Float, DateTime, ForeignKey, select
 from db.tables.Base import Base  # make sure to import your Base class from the same package
+
+import pandas as pd
+from sqlalchemy.orm import Session
+from db.database import connect
 
 class LabHem(Base):
     __tablename__ = "LabHem"
@@ -12,7 +16,7 @@ class LabHem(Base):
 
     # CSV columns
     ordnum: Mapped[int] = mapped_column(Integer, nullable=True)        # ORDNUM
-    daynum: Mapped[int] = mapped_column(Integer, nullable=True)        # DAYNUM
+    daynum: Mapped[str] = mapped_column(String(16), nullable=True)        # DAYNUM
     orddate: Mapped[datetime] = mapped_column(DateTime, nullable=True) # ORDDATE
     sex: Mapped[str] = mapped_column(Text, nullable=True)            # SEX
     departm: Mapped[str] = mapped_column(Text, nullable=True)        # DEPARTM
@@ -47,3 +51,79 @@ class LabHem(Base):
             f"valdescr={self.valdescr!r}, machine={self.machine!r}"
             f")"
         )
+
+    
+    @classmethod
+    def insert(cls, df: pd.DataFrame):
+        con,_ = connect()
+        if df is None or df.empty:
+            raise Exception("DataFrame is empty or None")
+        
+        if con is None:
+            raise Exception("Database connection failed")
+        
+        
+        df.columns = [col.lower() for col in df.columns]
+        df['cispac'] = pd.to_numeric(df['cispac'], errors='coerce')
+        cls.insert_missing_cispac(df, con)
+
+        session = Session(con)
+        from db.tables.Pacient import Pacient
+
+
+        chunk_size = 1000
+        total_inserted = 0
+        total_rows = len(df)
+
+        # Process in chunks
+        for start in range(0, total_rows, chunk_size):
+            # Get the chunk of the DataFrame
+            chunk = df.iloc[start:start + chunk_size]
+
+            # # Filter unique cispac IDs to check existing records
+            # new_ids = [int(id) for id in chunk['cispac'].unique()]
+            # existing_ids = set(
+            #     r[0] for r in session.execute(select(Pacient.id).where(Pacient.id.in_(new_ids)))
+            # )
+
+            # # Filter rows that do not already exist in the database
+            # filtered_chunk = chunk[chunk['cispac'].isin(set(new_ids) - existing_ids)]
+
+            # Create objects for the filtered rows
+            entries = [cls(**row.dropna().to_dict()) for _, row in chunk.iterrows()]
+
+            try:
+                session.bulk_save_objects(entries)
+                session.commit()
+
+                total_inserted += len(entries)
+                print(f"Inserted {total_inserted}/{total_rows} rows into LabHem. ({len(entries)} inserted in this chunk)")
+            except Exception as e:
+                session.rollback()
+                print("Error inserting data:", e)
+
+        # Close the session
+        session.close()
+
+
+        # TODO wrong, it filters by pacient id but there can be multiple
+        # new_ids = [int(id) for id in df['cispac'].unique()]
+        # existing_ids = set(
+        #     r[0] for r in session.execute(select(Pacient.id).where(Pacient.id.in_(new_ids)))
+        # )
+        #         # Filter out the IDs that already exist
+        # filtered_rows = df[df['cispac'].isin(set(new_ids) - existing_ids)]
+        # Create the objects only for the filtered rows (those that don't already exist)
+        # entries = [cls(**row.dropna().to_dict()) for _, row in df.iterrows()]
+
+
+
+        # try:
+        #     session.bulk_save_objects(entries)
+        #     session.commit()
+        #     print(f"Inserted {len(entries)}/{len(entries)} rows into LabHem. (unique/all)")
+        # except Exception as e:
+        #     session.rollback()
+        #     print("Error inserting data:", e)
+        # finally:
+        #     session.close()

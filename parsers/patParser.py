@@ -158,10 +158,12 @@ def parse() -> pd.DataFrame:
     """
     df = pd.DataFrame()
     for file in os.listdir(BASE_PATH):
-        print(f"Parsing file: {file}")
         if "pat" in file.lower():
+            print(f"Parsing file: {file}")
             parsed = parseFile(os.path.join(BASE_PATH, file), file)
             df = pd.concat([df, parsed])
+        else:
+            print(f"Skipping file: {file}")
 
     return df 
 

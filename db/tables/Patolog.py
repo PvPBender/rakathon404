@@ -55,10 +55,10 @@ class Patolog(Base):
     
     @classmethod
     def insert(cls, df: pd.DataFrame):
-        con,_ = connect()
         if df is None or df.empty:
             raise Exception("DataFrame is empty or None")
         
+        con,_ = connect()
         if con is None:
             raise Exception("Database connection failed")
         
