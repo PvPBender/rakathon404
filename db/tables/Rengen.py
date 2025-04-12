@@ -43,7 +43,7 @@ class Rengen(Base):
     cispac_1: Mapped[int] = mapped_column(Integer, nullable=True)  # "CISPAC.1"
     rtg_data_content: Mapped[str] = mapped_column(Text, nullable=True)  # "RTG_DATA_CONTENT"
 
-    pacient: Mapped[list["Pacient"]] = relationship(back_populates="rengen_entries", cascade="all, delete-orphan")
+    pacient: Mapped[list["Pacient"]] = relationship(back_populates="rengen_entries", cascade="all")
 
     def __repr__(self) -> str:
         return (

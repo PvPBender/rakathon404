@@ -12,6 +12,7 @@ from datetime import datetime
 
 def main():
     cispac_value = int("1")
+    patient = build_patient(cispac_value)
 
     try:
         connection = connect()
@@ -24,6 +25,7 @@ def main():
                     joinedload(Pacient.lab_bio_entries),
                     joinedload(Pacient.lab_hem_entries),
                     joinedload(Pacient.report_entries),
+                    joinedload(Paceint.r)
                 )
             )
 
@@ -36,7 +38,6 @@ def main():
                 logging.info(f"Report entries: {pacient_data.report_entries}")
                 logging.info(f"Rengen entries: {pacient_data.rengen_entries}")
 
-            patient = build_patient(cispac_value)
             patient = loadDataToPatient(patient, pacient_data)
             
         savePatient(f"patient_{cispac_value}.json", patient)
