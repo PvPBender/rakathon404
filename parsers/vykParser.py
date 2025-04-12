@@ -4,7 +4,7 @@ import numpy as np
 import logging
 import requests
 import os
-from parsers.utils import pathTo
+from parsers.utils import pathTo, clean_datetime_columns
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
 
 logging.basicConfig(
@@ -65,8 +65,8 @@ def load_and_prepare_data(year):
 
     for name, df in zip(["material", "vykony"], [df_material, df_vykony]):
         if df is not None:
-            df["DATUM"] = pd.to_datetime(df["DATUM"], dayfirst=True,
-                                         errors="coerce")
+            df = clean_datetime_columns(df, ["DATUM"])
+            
             n_missing = df["DATUM"].isna().sum()
             if n_missing > 0:
                 logging.warning(

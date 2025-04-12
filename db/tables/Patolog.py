@@ -37,7 +37,7 @@ class Patolog(Base):
     priloha: Mapped[str] = mapped_column(Text, nullable=True)     # "PRILOHA"
     priloha1: Mapped[str] = mapped_column(Text, nullable=True)    # "PRILOHA1"
     klindg: Mapped[str] = mapped_column(Text, nullable=True)      # "KLINDG"
-    text: Mapped[str] = mapped_column(Text, nullable=True)        # "TEXT"
+    text: Mapped[str] = mapped_column(MEDIUMTEXT, nullable=True)        # "TEXT"
 
     pacient: Mapped[list["Pacient"]] = relationship(back_populates="pat_entries", cascade="all")
 
@@ -71,14 +71,14 @@ class Patolog(Base):
         from db.tables.Pacient import Pacient
 
         # TODO wrong, it filters by pacient id but there can be multiple
-        new_ids = [int(id) for id in df['cispac'].unique()]
-        existing_ids = set(
-            r[0] for r in session.execute(select(Pacient.id).where(Pacient.id.in_(new_ids)))
-        )
+        # new_ids = [int(id) for id in df['cispac'].unique()]
+        # existing_ids = set(
+        #     r[0] for r in session.execute(select(Pacient.id).where(Pacient.id.in_(new_ids)))
+        # )
                 # Filter out the IDs that already exist
-        filtered_rows = df[df['cispac'].isin(set(new_ids) - existing_ids)]
+        # filtered_rows = df[df['cispac'].isin(set(new_ids) - existing_ids)]
         # Create the objects only for the filtered rows (those that don't already exist)
-        entries = [cls(**row.dropna().to_dict()) for _, row in filtered_rows.iterrows()]
+        entries = [cls(**row.dropna().to_dict()) for _, row in df.iterrows()]
 
 
         batch_insert(session, entries, 1000, "Patolog")
