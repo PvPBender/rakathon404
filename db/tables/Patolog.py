@@ -7,7 +7,6 @@ from sqlalchemy import Text, Integer, DateTime, ForeignKey, select
 from sqlalchemy.dialects.mysql import MEDIUMTEXT
 
 import pandas as pd
-import numpy as np
 from sqlalchemy.orm import Session
 
 from db.database import connect
@@ -71,6 +70,7 @@ class Patolog(Base):
         session = Session(con)
         from db.tables.Pacient import Pacient
 
+        # TODO wrong, it filters by pacient id but there can be multiple
         new_ids = [int(id) for id in df['cispac'].unique()]
         existing_ids = set(
             r[0] for r in session.execute(select(Pacient.id).where(Pacient.id.in_(new_ids)))
