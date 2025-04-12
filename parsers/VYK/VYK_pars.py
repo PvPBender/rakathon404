@@ -1,10 +1,10 @@
-import pandas as pd
 import logging
 import os
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
-from parsers.VYK.extract_codes_names import extract_codes_names
 
 logging.basicConfig(
     level=logging.INFO,
@@ -127,18 +127,41 @@ def drop_empty_columns(df, name):
     return df_cleaned
 
 
+import os
+import pandas as pd
+import requests
 
-CUR_DIR = os.path.dirname(__file__)
-# === main ===
-def parse() -> list[any]:
+CUR_DIR = os.path.dirname(os.path.abspath(__file__))
+OUTPUT_PATH = os.path.join(CUR_DIR, "output")  # Uprav dle potřeby
+
+
+def extract_codes_names_from_url_to_csv(url: str, csv_path: str) -> None:
     """
-    Parses all files that are for this parser and returns a list of parsed data
-    It should use parseFile to parse each file to avoid code duplication
+    Stáhne Excel z URL, přečte ho a uloží jako CSV.
+    """
+    response = requests.get(url)
+    response.raise_for_status()
+
+    with open(os.path.join(CUR_DIR, "temp.xlsx"), "wb") as f:
+        f.write(response.content)
+
+    df = pd.read_excel(os.path.join(CUR_DIR, "temp.xlsx"))
+    df.to_csv(csv_path, index=False)
+
+    os.remove(os.path.join(CUR_DIR, "temp.xlsx"))
+
+
+def parse() -> list:
+    """
+    Parses all files that are for this parser and returns a list of parsed data.
     """
 
-    if not os.path.exists(os.path.join(CUR_DIR, "vykony_kody_nazvy.csv")):
-        extract_codes_names(os.path.join(os.getcwd(), "parsers/VYK/Vyhlaska.xlsx"))
-        
+    csv_path = os.path.join(CUR_DIR, "vykony_kody_nazvy.csv")
+    vyhlaska_url = "https://szv.mzcr.cz/Vykon/Data/Vyhlaska.xlsx"
+
+    if not os.path.exists(csv_path):
+        extract_codes_names_from_url_to_csv(vyhlaska_url, csv_path)
+
     df_vykony_all = pd.DataFrame()
     df_material_all = pd.DataFrame()
 
@@ -148,23 +171,23 @@ def parse() -> list[any]:
         df_vykony = drop_empty_columns(df_vykony, f"vykony_{year}")
         df_material = drop_empty_columns(df_material, f"material_{year}")
 
-        df_vykony_all = pd.concat([df_vykony_all, df_vykony], ignore_index=True)
-        df_material_all = pd.concat([df_material_all, df_material], ignore_index=True)
+        df_vykony_all = pd.concat([df_vykony_all, df_vykony],
+                                  ignore_index=True)
+        df_material_all = pd.concat([df_material_all, df_material],
+                                    ignore_index=True)
 
-    
-    
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
+
     df_vykony_annotated = annotate_vykony_with_names(
         vykony_csv_or_df=df_vykony_all,
-        kod_ciselnik = os.path.join(CUR_DIR, "vykony_kody_nazvy.csv"),
-        output_csv = os.path.join(OUTPUT_PATH, "vykony_annotated.csv")
+        kod_ciselnik=csv_path,
+        output_csv=os.path.join(OUTPUT_PATH, "vykony_annotated.csv")
     )
 
-    file_path = os.path.join(OUTPUT_PATH, "material_all.csv")
-    df_material_all.to_csv(file_path, index=False)
+    df_material_all.to_csv(os.path.join(OUTPUT_PATH, "material_all.csv"),
+                           index=False)
 
     return df_vykony_annotated
-
-
 
 
 if __name__ == "__main__":
