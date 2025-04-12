@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 from datetime import date
 
 ###############################################################################
@@ -7,12 +7,12 @@ from datetime import date
 # Below is a single Python file containing dataclasses for each cancer module
 # M.B.2.X up to M.B.2.13, based on the specification you provided.
 #
-# Fields marked “Povinné, 1..1” or “Podmíněně povinné, 1..1” are represented as
+# Fields marked "Povinné, 1..1" or "Podmíněně povinné, 1..1" are represented as
 # non-Optional, meaning you must supply a value when constructing the dataclass.
-# Fields marked “Podmíněně povinné, 0..1” or “Volitelné, 0..1” are represented
+# Fields marked "Podmíněně povinné, 0..1" or "Volitelné, 0..1" are represented
 # as Optional[…], defaulting to None.
 #
-# For each “výběr {…}” or code list, here we simply use str. In production,
+# For each "výběr {…}" or code list, here we simply use str. In production,
 # you might replace these with Enums for safety.
 #
 # Every data field has a brief comment with its meaning, cardinality, or extra
@@ -31,7 +31,7 @@ class MB21:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # Multigenové vyšetření pomocí NGS – výběr {Provedeno, Neprovedeno, Údaj není k dispozici}, (1..1)
-    M_B_2_1_2_1: str
+    M_B_2_1_2_1: str = ""
     # Datum NGS vyšetření – (datum, 0..1)
     M_B_2_1_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -75,7 +75,7 @@ class MB21:
     M_B_2_1_4_1: str = ""
     # Dědičné predispoziční syndromy – (výběr, 0..1)
     M_B_2_1_4_2: Optional[str] = None
-    # Jiný predispoziční syndrom – (text, 1..1 if “jiný”, else 0..1 overall)
+    # Jiný predispoziční syndrom – (text, 1..1 if "jiný", else 0..1 overall)
     M_B_2_1_4_2_1: Optional[str] = None
 
 
@@ -90,7 +90,7 @@ class MB22:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # Multigenové vyšetření pomocí NGS – (1..1)
-    M_B_2_2_2_1: str
+    M_B_2_2_2_1: str = ""
     # Datum NGS vyšetření – (datum, 0..1)
     M_B_2_2_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -159,7 +159,7 @@ class MB23:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_3_2_1: str
+    M_B_2_3_2_1: str = ""
     # Datum NGS – (date, 0..1)
     M_B_2_3_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -236,7 +236,7 @@ class MB24:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_4_2_1: str
+    M_B_2_4_2_1: str = ""
     # Datum NGS – (date, 0..1)
     M_B_2_4_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (0..1)
@@ -292,7 +292,7 @@ class MB25:
     M_B_2_5_1_3: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_5_2_1: str
+    M_B_2_5_2_1: str = ""
     M_B_2_5_2_1_1: Optional[date] = None
     M_B_2_5_2_1_2: Optional[str] = None
     M_B_2_5_2_1_3: str = ""
@@ -326,7 +326,7 @@ class MB25:
     M_B_2_5_4_3: str = ""
     # Dědičné predispoziční syndromy – (0..1)
     M_B_2_5_4_4: Optional[str] = None
-    # Jiný predispoziční syndrom – (1..1 if “jiný”)
+    # Jiný predispoziční syndrom – (1..1 if "jiný")
     M_B_2_5_4_4_1: Optional[str] = None
 
 
@@ -348,7 +348,7 @@ class MB26:
     M_B_2_6_1_3: str = ""
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_6_2_1: str
+    M_B_2_6_2_1: str = ""
     M_B_2_6_2_1_1: Optional[date] = None
     M_B_2_6_2_1_2: Optional[str] = None
     M_B_2_6_2_1_3: str = ""
@@ -396,7 +396,7 @@ class MB26:
     M_B_2_6_4_5: str = ""
     # Dědičné predispoziční syndromy – (0..1)
     M_B_2_6_4_6: Optional[str] = None
-    # Jiný predispoziční syndrom – (0..1 if “jiný”)
+    # Jiný predispoziční syndrom – (0..1 if "jiný")
     M_B_2_6_4_6_1: Optional[str] = None
 
 
@@ -416,7 +416,7 @@ class MB27_Anal:
     M_B_2_7_1_2: str = ""
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_7_2_1: str
+    M_B_2_7_2_1: str = ""
     M_B_2_7_2_1_1: Optional[date] = None
     M_B_2_7_2_1_2: Optional[str] = None
     M_B_2_7_2_1_3: str = ""
@@ -437,7 +437,7 @@ class MB27_Anal:
 
 
 ###############################################################################
-# M.B.2.7 – Nádory GIT (Karcinom pankreatu) – (the specification reuses “2.7”)
+# M.B.2.7 – Nádory GIT (Karcinom pankreatu) – (the specification reuses "2.7")
 ###############################################################################
 @dataclass
 class MB27_Pankreas:
@@ -452,7 +452,7 @@ class MB27_Pankreas:
     M_B_2_7_pan_2: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_7_pan_2_1: str
+    M_B_2_7_pan_2_1: str = ""   
     M_B_2_7_pan_2_1_1: Optional[date] = None
     M_B_2_7_pan_2_1_2: Optional[str] = None
     M_B_2_7_pan_2_1_3: str = ""
@@ -520,7 +520,7 @@ class MB28:
     M_B_2_8_1_1: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_8_2_1: str
+    M_B_2_8_2_1: str = ""
     M_B_2_8_2_1_1: Optional[date] = None
     M_B_2_8_2_1_2: Optional[str] = None
     M_B_2_8_2_1_3: str = ""
@@ -553,7 +553,7 @@ class MB29:
     M_B_2_9_1_2: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_9_2_1: str
+    M_B_2_9_2_1: str = ""
     M_B_2_9_2_1_1: Optional[date] = None
     M_B_2_9_2_1_2: Optional[str] = None
     M_B_2_9_2_1_3: str = ""
@@ -595,7 +595,7 @@ class MB210:
     M_B_2_10_1_2: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_10_2_1: str
+    M_B_2_10_2_1: str = ""
     M_B_2_10_2_1_1: Optional[date] = None
     M_B_2_10_2_1_2: Optional[str] = None
     M_B_2_10_2_1_3: str = ""
@@ -641,7 +641,7 @@ class MB211:
     M_B_2_11_1_5: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_11_2_1: str
+    M_B_2_11_2_1: str = ""
     M_B_2_11_2_1_1: Optional[date] = None
     M_B_2_11_2_1_2: Optional[str] = None
     M_B_2_11_2_1_3: str = ""
@@ -689,7 +689,7 @@ class MB212:
     M_B_2_12_1_2: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_12_2_1: str
+    M_B_2_12_2_1: str = ""
     M_B_2_12_2_1_1: Optional[date] = None
     M_B_2_12_2_1_2: Optional[str] = None
     M_B_2_12_2_1_3: str = ""
@@ -712,7 +712,7 @@ class MB212:
     M_B_2_12_2_8: Optional[str] = None
 
     # --------------- KLASIFIKACE ---------------
-    # FIGO staging – (1..1, “ANO/NE”)
+    # FIGO staging – (1..1, "ANO/NE")
     M_B_2_12_3_1: str = ""
     # FIGO – (1..1 if above=Ano)
     M_B_2_12_3_1_1: Optional[str] = None
@@ -754,7 +754,7 @@ class MB213:
     M_B_2_13_1_4: Optional[float] = None
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
-    M_B_2_13_2_1: str
+    M_B_2_13_2_1: str = ""
     M_B_2_13_2_1_1: Optional[date] = None
     M_B_2_13_2_1_2: Optional[str] = None
     M_B_2_13_2_1_3: str = ""
@@ -778,7 +778,7 @@ class MB213:
     M_B_2_13_2_8: Optional[str] = None
 
     # --------------- KLASIFIKACE ---------------
-    # FIGO staging – (1..1, “ANO/NE”)
+    # FIGO staging – (1..1, "ANO/NE")
     M_B_2_13_3_1: str = ""
     # FIGO – (1..1 if above=Ano)
     M_B_2_13_3_1_1: Optional[str] = None
@@ -812,7 +812,7 @@ class MB214:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_14_2_1: str
+    M_B_2_14_2_1: str = ""
     # Datum NGS vyšetření – (date, 0..1)
     M_B_2_14_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -863,7 +863,7 @@ class MB215:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_15_2_1: str
+    M_B_2_15_2_1: str = ""
     # Datum NGS vyšetření – (date, 0..1)
     M_B_2_15_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -881,7 +881,7 @@ class MB215:
     M_B_2_15_4_1: str = ""
     # Dědičné predispoziční syndromy – (0..1)
     M_B_2_15_4_2: Optional[str] = None
-    # Jiný predispoziční syndrom – (0..1 if “jiný”)
+    # Jiný predispoziční syndrom – (0..1 if "jiný")
     M_B_2_15_4_3: Optional[str] = None
     # Obezita – (1..1)
     M_B_2_15_4_4: str = ""
@@ -909,7 +909,7 @@ class MB216:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_16_2_1: str
+    M_B_2_16_2_1: str = ""
     # Datum NGS – (date, 0..1)
     M_B_2_16_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -972,7 +972,7 @@ class MB217:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_17_2_1: str
+    M_B_2_17_2_1: str = ""
     M_B_2_17_2_2: Optional[date] = None
     M_B_2_17_2_3: Optional[str] = None
     M_B_2_17_2_4: str = ""
@@ -1041,7 +1041,7 @@ class MB218:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_18_2_1: str
+    M_B_2_18_2_1: str = ""
     M_B_2_18_2_1_1: Optional[date] = None
     M_B_2_18_2_1_2: Optional[str] = None
     M_B_2_18_2_1_3: str = ""
@@ -1090,7 +1090,7 @@ class MB221:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_21_2_1: str
+    M_B_2_21_2_1: str = ""
     # Datum NGS – (date, 0..1)
     M_B_2_21_2_2: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -1142,7 +1142,7 @@ class MB221:
     M_B_2_21_4_1: str = ""
     # Dědičné predispoziční syndromy – (0..1)
     M_B_2_21_4_2: Optional[str] = None
-    # Jiný predispoziční syndrom – (0..1 if “jiný”)
+    # Jiný predispoziční syndrom – (0..1 if "jiný")
     M_B_2_21_4_3: Optional[str] = None
     # Melanom v OA – (1..1)
     M_B_2_21_4_4: str = ""
@@ -1170,7 +1170,7 @@ class MB222:
 
     # --------------- MOLEKULÁRNĚ-GENETICKÉ MARKERY ---------------
     # NGS – (1..1)
-    M_B_2_22_2_1: str
+    M_B_2_22_2_1: str = ""      
     # Datum NGS – (date, 0..1)
     M_B_2_22_2_1_1: Optional[date] = None
     # Vyšetřovaná tkáň – (text, 0..1)
@@ -1183,7 +1183,7 @@ class MB222:
     M_B_2_22_2_2: Optional[str] = None
 
     # --------------- KLASIFIKACE ---------------
-    # Staging dle AJCC (8. th 2016) – (Povinné, 1..1, “Ano/Ne”)
+    # Staging dle AJCC (8. th 2016) – (Povinné, 1..1, "Ano/Ne")
     M_B_2_22_3_1: str = ""
     # AJCC skupina (I, II, III, IV) – (1..1 if above=Ano)
     M_B_2_22_3_2: Optional[str] = None
@@ -1242,11 +1242,41 @@ class MB223:
     # (Exact staging details for endocrine tumors can vary (AJCC/ENETS).
     #  The specification snippet does not show the exact fields, so
     #  here is a placeholder for classification.)
-    # Podmíněně povinné? Possibly 1..1 with further subfields if “Ano.”
+    # Podmíněně povinné? Possibly 1..1 with further subfields if "Ano."
     M_B_2_23_3_1: Optional[str] = None  # e.g., "WHO classification" or "AJCC stage"
 
     # ------------------ RIZIKOVÉ FAKTORY (M.B.2.23.4) ------------------
     # (Same here: the doc snippet is minimal, so we place a placeholder.)
     M_B_2_23_4_1: Optional[str] = None  # e.g. "Familiární zátěž, MEN2, etc."
+
+
+@dataclass
+class PacientTemplateModuleB2:
+    """
+    M.B.2: Cancer type specific modules
+    """
+    M_B_2_1: Optional["MB21"] = None  # Nádory CNS
+    M_B_2_2: Optional["MB22"] = None  # Nádory hlavy a krku
+    M_B_2_3: Optional["MB23"] = None  # Nádory respiračního systému a mediastina
+    M_B_2_4: Optional["MB24"] = None  # Karcinom jícnu
+    M_B_2_5: Optional["MB25"] = None  # Karcinom žaludku / gastroezofageální junkce
+    M_B_2_6: Optional["MB26"] = None  # Kolorektální karcinom
+    M_B_2_7_Anal: Optional["MB27_Anal"] = None  # Anální karcinom
+    M_B_2_7_Pankreas: Optional["MB27_Pankreas"] = None  # Karcinom pankreatu
+    M_B_2_8: Optional["MB28"] = None  # Karcinom jater
+    M_B_2_9: Optional["MB29"] = None  # Karcinom žlučníku / žlučových cest
+    M_B_2_10: Optional["MB210"] = None  # Karcinom prsu
+    M_B_2_11: Optional["MB211"] = None  # Ca čípku a hrdla děložního
+    M_B_2_12: Optional["MB212"] = None  # Ca těla děložního
+    M_B_2_13: Optional["MB213"] = None  # Nádory ovaria
+    M_B_2_14: Optional["MB214"] = None  # Gynekologické nádory (zevní rodidla)
+    M_B_2_15: Optional["MB215"] = None  # Renální karcinom
+    M_B_2_16: Optional["MB216"] = None  # Karcinom močového měchýře a močových cest
+    M_B_2_17: Optional["MB217"] = None  # Karcinom prostaty
+    M_B_2_18: Optional["MB218"] = None  # Germinální nádory
+    M_B_2_20: Optional["MB220"] = None  # Nádory kůže (nemelanomové)
+    M_B_2_21: Optional["MB221"] = None  # Maligní melanom
+    M_B_2_22: Optional["MB222"] = None  # Nádory kostí a sarkomy měkkých tkání
+    M_B_2_23: Optional["MB223"] = None  # Nádory endokrinních žláz
 
 

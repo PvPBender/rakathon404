@@ -10,6 +10,8 @@ from loader.handleRengen import handleRengen
 
 from model.patientTemplateModuleA import MA1
 
+import logging
+
 
 def build_patient(cispac_value: str) -> PacientTemplate:
     patient = PacientTemplate()
@@ -23,8 +25,9 @@ def loadDataToPatient(patient: PacientTemplate, pacient_data: Pacient):
         logging.error(f"Pacient data not found for {patient.M_1.M_1_1.M_1_1_4}")
         return patient
     
-
     for pat_entry in pacient_data.pat_entries:
+        print(pat_entry)
+        print(pat_entry.text)
         handlePat(pat_entry, patient)
 
     for biolab_entry in pacient_data.lab_bio_entries:

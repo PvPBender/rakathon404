@@ -330,7 +330,7 @@ class MC2:
     """
 
     # M.C.2.1 (Povinné, 1..1)
-    M_C_2_1: date
+    M_C_2_1: date = None
     """Datum operace – Povinné, 1..1"""
 
     # M.C.2.2 (Podmíněně povinné, 1..1)
@@ -362,7 +362,7 @@ class MC2:
     """Radikální resekce - nádory CNS – {GTR, NTR, STR}"""
 
     # M.C.2.7 (Povinné, 1..1)
-    M_C_2_7: MakroskopickeRezidum
+    M_C_2_7: MakroskopickeRezidum = field(default_factory=MakroskopickeRezidum)
     """Makroskopické rezidum nádoru (R2) – {Ano, Ne, Nehodnoceno}"""
 
     # M.C.2.8 (Podmíněně povinné, 0..*)
@@ -450,7 +450,7 @@ class MC4:
     """
 
     # M.C.4.1 (Povinné, 1..1)
-    M_C_4_1: date
+    M_C_4_1: date = None
     """Datum zahájení série – Povinné, 1..1"""
 
     # M.C.4.2 (Podmíněně povinné, 0..1)
@@ -470,7 +470,7 @@ class MC4:
     """Konkomitantní strategie – ANO/NE/Údaj není k dispozici"""
 
     # M.C.4.6 (Povinné, 1..1) – výběr {ANO, NE, Údaj není k dispozici}
-    M_C_4_6: AnoNeUdaj
+    M_C_4_6: AnoNeUdaj = field(default_factory=AnoNeUdaj)
     """Zevní radioterapie – Povinné, 1..1"""
 
     # M.C.4.6.1 (Podmíněně povinné, 1..1) if M.C.4.6 == ANO,
@@ -479,7 +479,7 @@ class MC4:
     """Typ zevní RT – více možností"""
 
     # M.C.4.7 (Povinné, 1..1) – ANO/NE/Údaj není k dispozici
-    M_C_4_7: AnoNeUdaj
+    M_C_4_7: AnoNeUdaj = field(default_factory=AnoNeUdaj)
     """Brachyterapie – Povinné, 1..1"""
 
     # M.C.4.8 (Podmíněně povinné, 0..1) – text
@@ -517,7 +517,7 @@ class MC5:
     """
 
     # M.C.5.1 (Povinné, 1..1)
-    M_C_5_1: date
+    M_C_5_1: date = None
     """Datum zahájení – Povinné, 1..1"""
 
     # M.C.5.2 (Podmíněně povinné, 0..1)
@@ -533,7 +533,7 @@ class MC5:
     """Upřesnění strategie – {neoadjuvance, adjuvance}"""
 
     # M.C.5.5 (Povinné, 1..1) – text
-    M_C_5_5: str
+    M_C_5_5: str = ""
     """Režim – text (povinné)"""
 
     # M.C.5.6 (Volitelné, 0..*) – číselník ATC, více možností
@@ -555,7 +555,7 @@ class MC6:
     """
 
     # M.C.6.1 (Povinné, 1..1)
-    M_C_6_1: date
+    M_C_6_1: date = None
     """Datum zahájení – Povinné, 1..1"""
 
     # M.C.6.2 (Podmíněně povinné, 0..1)
@@ -571,7 +571,7 @@ class MC6:
     """Upřesnění strategie – {neoadjuvance, adjuvance}"""
 
     # M.C.6.5 (Povinné, 1..1) – text
-    M_C_6_5: str
+    M_C_6_5: str = ""
     """Režim – text (povinné)"""
 
     # M.C.6.6 (Volitelné, 0..*) – číselník ATC, více možností
@@ -593,7 +593,7 @@ class MC7:
     """
 
     # M.C.7.1 (Povinné, 1..1)
-    M_C_7_1: date
+    M_C_7_1: date = None
     """Datum zahájení – Povinné, 1..1"""
 
     # M.C.7.2 (Podmíněně povinné, 0..1)
@@ -609,7 +609,7 @@ class MC7:
     """Upřesnění strategie – {neoadjuvance, adjuvance} if M.C.7.3 = kurativní"""
 
     # M.C.7.5 (Povinné, 1..1) – text
-    M_C_7_5: str
+    M_C_7_5: str = ""
     """Režim – povinné, 1..1"""
 
     # M.C.7.6 (Volitelné, 0..*) – číselník ATC, více možností
@@ -631,7 +631,7 @@ class MC8:
     """
 
     # M.C.8.1 (Povinné, 1..1)
-    M_C_8_1: date
+    M_C_8_1: date = None
     """Datum zahájení – Povinné, 1..1"""
 
     # M.C.8.2 (Podmíněně povinné, 0..1)
@@ -647,7 +647,7 @@ class MC8:
     """Upřesnění strategie – {neoadjuvance, adjuvance} if M.C.8.3 = kurativní"""
 
     # M.C.8.5 (Povinné, 1..1) – text
-    M_C_8_5: str
+    M_C_8_5: str = ""
     """Režim – povinné, 1..1"""
 
     # M.C.8.6 (Volitelné, 0..1) – text
@@ -665,7 +665,7 @@ class MC9:
     """
 
     # M.C.9.1 (Povinné, 1..1)
-    M_C_9_1: date
+    M_C_9_1: date = None    
     """Datum zahájení – Povinné, 1..1"""
 
     # M.C.9.2 (Podmíněně povinné, 0..1)
@@ -708,7 +708,7 @@ class MC10_2:
        but let's treat it as optional)"""
 
     # M.C.10.2.2 (Povinné, 1..1) – výběr {CR, PR, SD, PD, Nelze hodnotit}
-    M_C_10_2_2: HodnocenaLecebnaOdpoved
+    M_C_10_2_2: HodnocenaLecebnaOdpoved = field(default_factory=HodnocenaLecebnaOdpoved)
     """Hodnocená léčebná odpověď – povinné, 1..1"""
 
     # M.C.10.2.3 (Podmíněně povinné, 1..1 if Progrese)
@@ -748,7 +748,7 @@ class MC11:
     """
 
     # M.C.11.1 (Povinné, 1..1)
-    M_C_11_1: str
+    M_C_11_1: str = ""
     """Název – text, povinné, 1..1"""
 
     # M.C.11.2 (Podmíněně povinné, 1..1)
@@ -787,7 +787,7 @@ class MC12:
     """
 
     # M.C.12.1 (Povinné, 1..1)
-    M_C_12_1: str
+    M_C_12_1: str = ""  
     """Název studie – text, povinné, 1..1"""
 
     # M.C.12.2 (Podmíněně povinné, 1..1) – {akademická, komerční}
@@ -814,3 +814,20 @@ class MC12:
 #
 # ============= END OF FILE =============
 #
+
+@dataclass
+class PacientTemplateModuleC:
+    """
+    Main class for Module C that encapsulates all treatment-related data.
+    """
+    M_C_2: List[MC2] = field(default_factory=list)  # Chirurgická léčba
+    M_C_3: List[MC3] = field(default_factory=list)  # Chemoterapie
+    M_C_4: List[MC4] = field(default_factory=list)  # Radioterapie
+    M_C_5: List[MC5] = field(default_factory=list)  # Cílená léčba
+    M_C_6: List[MC6] = field(default_factory=list)  # Hormonoterapie
+    M_C_7: List[MC7] = field(default_factory=list)  # Imunoterapie
+    M_C_8: List[MC8] = field(default_factory=list)  # Cytokinová terapie
+    M_C_9: List[MC9] = field(default_factory=list)  # Jiné léčebné modality
+    M_C_10: Optional[MC10] = None  # Léčebná odpověď
+    M_C_11: List[MC11] = field(default_factory=list)  # Závažná toxicita
+    M_C_12: List[MC12] = field(default_factory=list)  # Klinické studie

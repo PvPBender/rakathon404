@@ -10,24 +10,18 @@ class AnoNeUdaje:
 # --- M.A.1.1 ---
 @dataclass
 class MA11:
-    M_A_1_1_1: (
-        str  # Relevantní nádorový predispoziční syndrom – Podmíněně povinné, 1..1
-    )
-    M_A_1_1_2: List[str]  # Název predispozičního syndromu – Povinné, 1..*
-    M_A_1_1_2_1: Optional[str] = (
-        None  # Jiný predispoziční syndrom – Povinné if M_A_1_1_2 includes "Jiný"
-    )
+    M_A_1_1_1: str = ""  # Relevantní nádorový predispoziční syndrom – Podmíněně povinné, 1..1
+    M_A_1_1_2: List[str] = field(default_factory=list)  # Název predispozičního syndromu – Povinné, 1..*
+    M_A_1_1_2_1: Optional[str] = ""  # Jiný predispoziční syndrom – Povinné if M_A_1_1_2 includes "Jiný"
     M_A_1_1_3: Optional[str] = None  # Komentář – Volitelné
 
 
 # --- M.A.1.2 ---
 @dataclass
 class MA12:
-    M_A_1_2_1: str  # Příbuzenský stav – Podmíněně povinné, 1..1
-    M_A_1_2_2: str  # Onkologické onemocnění – specifikace – Podmíněně povinné, 1..1
-    M_A_1_2_3: Optional[List[str]] = (
-        None  # Onkologické onemocnění – kód MKN-10 – Volitelné, 0..*
-    )
+    M_A_1_2_1: str = ""  # Příbuzenský stav – Podmíněně povinné, 1..1
+    M_A_1_2_2: str = ""  # Onkologické onemocnění – specifikace – Podmíněně povinné, 1..1
+    M_A_1_2_3: Optional[List[str]] = field(default_factory=list)  # Onkologické onemocnění – kód MKN-10 – Volitelné, 0..*
 
 
 # --- M.A.1.3 ---
@@ -40,18 +34,18 @@ class DiseaseWithComment:
 @dataclass
 class MA13:
     # Non-default fields first
-    M_A_1_3_1: str  # Srdce a cévy
-    M_A_1_3_2: str  # Metabolické
-    M_A_1_3_3: str  # Plicní
-    M_A_1_3_4: str  # GIT
-    M_A_1_3_5: str  # Ledviny
-    M_A_1_3_6: str  # Autoimunitní
-    M_A_1_3_7: str  # Závažné endokrinologické onemocnění
-    M_A_1_3_8: str  # Neuropsychiatrické onemocnění
-    M_A_1_3_9: str  # Gynekologické onemocnění + anamnéza
-    M_A_1_3_10: str  # Závažné infekční onemocnění
-    M_A_1_3_11: AnoNeUdaje  # Orgánová transplantace		ANO/NE/údaj není k dispozici
-    M_A_1_3_11_1: List[str]  # Organ
+    M_A_1_3_1: str = ""  # Srdce a cévy
+    M_A_1_3_2: str = ""  # Metabolické
+    M_A_1_3_3: str = ""  # Plicní
+    M_A_1_3_4: str = ""  # GIT
+    M_A_1_3_5: str = ""  # Ledviny
+    M_A_1_3_6: str = ""  # Autoimunitní
+    M_A_1_3_7: str = ""  # Závažné endokrinologické onemocnění
+    M_A_1_3_8: str = ""  # Neuropsychiatrické onemocnění
+    M_A_1_3_9: str = ""  # Gynekologické onemocnění + anamnéza
+    M_A_1_3_10: str = ""  # Závažné infekční onemocnění
+    M_A_1_3_11: AnoNeUdaje = field(default_factory=AnoNeUdaje)  # Orgánová transplantace		ANO/NE/údaj není k dispozici
+    M_A_1_3_11_1: List[str] = field(default_factory=list)  # Organy
 
     # Default fields after
     M_A_1_3_1_1: Optional[str] = None  # Srdce a cévy - komentář
@@ -152,9 +146,9 @@ class Drogovazavislost:
 @dataclass
 class MA18:
     # Non-default fields first
-    M_A_1_8_1: Kurak  # Kouření – Povinné, 1..1 výběr {Aktivní kuřák, Bývalý kuřák, Pasivní kuřák, Nekuřák, údaj není k dispozici}
-    M_A_1_8_2: Alkohol  # Alkohol – Povinné, 1..1 výběr {Abstinent, Příležitostní konzumace, Denní konzumace, údaj není k dispozici}
-    M_A_1_8_3: Drogovazavislost  # Drogová závislost – Povinné, 1..1 výběr {Aktuálně drogově závislý(á), Nikdy drogově závislý(á), Drogově závislý(á) v minulosti, Údaj není k dispozici}
+    M_A_1_8_1: Kurak = field(default_factory=Kurak)  # Kouření – Povinné, 1..1 výběr {Aktivní kuřák, Bývalý kuřák, Pasivní kuřák, Nekuřák, údaj není k dispozici}
+    M_A_1_8_2: Alkohol = field(default_factory=Alkohol)  # Alkohol – Povinné, 1..1 výběr {Abstinent, Příležitostní konzumace, Denní konzumace, údaj není k dispozici}
+    M_A_1_8_3: Drogovazavislost = field(default_factory=Drogovazavislost)  # Drogová závislost – Povinné, 1..1 výběr {Aktuálně drogově závislý(á), Nikdy drogově závislý(á), Drogově závislý(á) v minulosti, Údaj není k dispozici}
 
     # Default fields after
     M_A_1_8_1_1: Optional[float] = None  # Počet denně vykouřených balíčků/krabiček – Podmíněně povinné, 0..1
@@ -167,9 +161,9 @@ class MA18:
 
 @dataclass
 class MA2:
-    M_A_2_1: str  # Datum měření – Povinné
-    M_A_2_2: float  # Výška v cm – Povinné, 1..1
-    M_A_2_3: float  # Hmotnost v kg – Povinné, 1..1
+    M_A_2_1: str = ""    # Datum měření – Povinné
+    M_A_2_2: float = 0  # Výška v cm – Povinné, 1..1
+    M_A_2_3: float = 0  # Hmotnost v kg – Povinné, 1..1
     M_A_2_4: Optional[float] = (
         None  # BMI – Podmíněně povinné (automatický výpočet), 1..1
     )
@@ -191,7 +185,7 @@ class MA32:
 # --- M.A.4 ---
 @dataclass
 class MA4:
-    M_A_4_1: str                           # Typ opatření
+    M_A_4_1: str = ""                    # Typ opatření
     M_A_4_2: Optional[str] = None          # Datum provedení/zahájení opatření
     M_A_4_3: Optional[str] = None          # Místo uložení vzorku
     M_A_4_4: Optional[str] = None          # Volitelný komentář
@@ -201,7 +195,7 @@ class MA4:
 # --- M.A.1 ---
 @dataclass
 class MA1:
-    M_A_1_1: MA11
+    M_A_1_1: "MA11" = field(default_factory=MA11)
     M_A_1_2: Optional[List[MA12]] = field(default_factory=list)
     M_A_1_3: Optional[MA13] = None
     M_A_1_5: Optional[List[MA15]] = field(default_factory=list)
@@ -213,7 +207,7 @@ class MA1:
 # --- Modul A ---
 @dataclass
 class PacientTemplateModuleA:
-    M_A_1: MA1
+    M_A_1: "MA1" = field(default_factory=MA1)
     M_A_2: Optional[List[MA2]] = field(default_factory=list)
     M_A_3: Optional[List[MA3]] = field(default_factory=list)
     M_A_3_2: Optional[List[MA32]] = field(default_factory=list)         

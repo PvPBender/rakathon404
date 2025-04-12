@@ -11,7 +11,7 @@ import logging
 from datetime import datetime
 
 def main():
-    cispac_value = int("206")
+    cispac_value = 98332
     patient = build_patient(cispac_value)
 
     try:
@@ -30,6 +30,8 @@ def main():
             )
 
             pacient_data = session.execute(stmt).unique().scalar_one_or_none()
+
+            print(f"Pacient data: {pacient_data.pat_entries}")
 
             if pacient_data:
                 logging.info(f"Patolog entries: {pacient_data.pat_entries}")

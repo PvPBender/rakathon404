@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
 # --- Value Sets ---
@@ -37,14 +37,14 @@ class TNM_CM:
 @dataclass
 class MB1:
     # Non-default fields first
-    M_B_1_2_1: str
-    M_B_1_2_3: str
-    M_B_1_2_4: str
-    M_B_1_2_5: Lateralita
-    M_B_1_2_8: str
-    M_B_1_4_1: str  # Výběr diagnostické skupiny (Povinné)
-    M_B_3_2_2: str  # Datum relapsu/progrese
-    M_B_3_2_2_1: str  # Typ relapsu
+    M_B_1_2_1: str = ""
+    M_B_1_2_3: str = ""
+    M_B_1_2_4: str = ""
+    M_B_1_2_5: Lateralita = field(default_factory=Lateralita)
+    M_B_1_2_8: str = ""
+    M_B_1_4_1: str = ""  # Výběr diagnostické skupiny (Povinné)
+    M_B_3_2_2: str = ""  # Datum relapsu/progrese
+    M_B_3_2_2_1: str = ""  # Typ relapsu
 
     # Default fields after
     M_B_1_1: Optional[int] = None
@@ -86,10 +86,10 @@ class MB1:
     M_B_1_3_8: Optional[str] = None
     M_B_1_3_9: Optional[str] = None
 
-    M_B_2_XX: Optional[str] = None  # Volitelný komentář / doplnění / slovní popis diagnózy
+    # M_B_2_XX: Optional[str] = None  # Volitelný komentář / doplnění / slovní popis diagnózy
     M_B_3_2_1: Optional[bool] = None  # Trvá léčebná odpověď
     M_B_3_2_3: Optional[str] = None  # Volitelný komentář
 
 @dataclass
 class PacientTemplateModuleB1:
-    M_B_1 : MB1
+    M_B_1 : MB1 = field(default_factory=MB1)
