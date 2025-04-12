@@ -1,23 +1,13 @@
 import pandas as pd
-from typing import Dict, List, Optional
-import os
-from dotenv import load_dotenv
 from sqlalchemy.exc import SQLAlchemyError
-from loader.buildPatient import build_patient
-from loader.handleBio import handleBio
-from loader.handleHem import handleHem
-from loader.handlePat import handlePatolog
-from loader.handlePatientData import handlePatientData
+from loader.buildPatient import build_patient, loadDataToPatient
 from model.seriliaziePatient import savePatient
 from db.database import connect
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text
-import logging
-from loader.handleReport import handleReport
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import joinedload
 from sqlalchemy.future import select
 from db.tables.Patient import Pacient
+import logging
 
 
 def main():
@@ -40,28 +30,17 @@ def main():
                 )
             )
 
-            pacient = session.execute(stmt).scalar_one_or_none()
+            pacient_data = session.execute(stmt).scalar_one_or_none()
 
-            if pacient:
-                logging.info(f"Patolog entries: {pacient.pat_entries}")
-                logging.info(f"BioLab entries: {pacient.lab_bio_entries}")
-                logging.info(f"LabHem entries: {pacient.lab_hem_entries}")
-                logging.info(f"Report entries: {pacient.report_entries}")
+            if pacient_data:
+                logging.info(f"Patolog entries: {pacient_data.pat_entries}")
+                logging.info(f"BioLab entries: {pacient_data.lab_bio_entries}")
+                logging.info(f"LabHem entries: {pacient_data.lab_hem_entries}")
+                logging.info(f"Report entries: {pacient_data.report_entries}")
 
             patient = build_patient(cispac_value)
-
-            for pat_entry in pacient.pat_entries:
-                handlePatolog(pat_entry, patient)
-
-            for biolab_entry in pacient.lab_bio_entries:
-                handleBio(biolab_entry, patient)
-
-            for labhem_entry in pacient.lab_hem_entries:
-                handleHem(labhem_entry, patient)
-
-            for report_entry in pacient.report_entries:
-                handleReport(report_entry, patient)
-
+            patient = loadDataToPatient(patient, pacient_data)
+            
         savePatient(f"patient_{cispac_value}.json", patient)
 
     except SQLAlchemyError as e:
