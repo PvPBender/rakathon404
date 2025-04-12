@@ -1,5 +1,6 @@
 import pandas as pd
 from model.patientTemplate import PacientTemplate, IdentifikatorPacienta
+from model.patientTemplateModuleC import PacientTemplateModuleC
 
 from db.tables.Pacient import Pacient
 from loader.handlePat import handlePat
