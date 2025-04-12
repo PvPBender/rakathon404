@@ -1,14 +1,15 @@
 import pandas as pd
 from datetime import datetime
 from sqlalchemy import String, Float, Integer, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .Base import Base
-
+from sqlalchemy import ForeignKey
 
 # --- Table 1: material_all.csv ---
 class HospitalReport(Base):
-    __tablename__ = "hospital_report"
-
+    __tablename__ = "HospitalReport"
+    cispac: Mapped[int] = mapped_column(Integer, ForeignKey('Pacient.id'))  # "CISPAC" as ID
+    
     serial: Mapped[float] = mapped_column(primary_key=True)
     cdokl: Mapped[int] = mapped_column(Integer, nullable=True)
     datum: Mapped[datetime] = mapped_column(DateTime, nullable=True)
@@ -21,10 +22,14 @@ class HospitalReport(Base):
     cenauziv: Mapped[float] = mapped_column(Float, nullable=True)
     cena: Mapped[float] = mapped_column(Float, nullable=True)
     serialcdb: Mapped[float] = mapped_column(Float, nullable=True)
-    cispac: Mapped[int] = mapped_column(Integer, nullable=True)
+    # cispac: Mapped[int] = mapped_column(Integer, nullable=True)
     cispac_z_uctu: Mapped[float] = mapped_column(Float, nullable=True)
     rok: Mapped[int] = mapped_column(Integer, nullable=True)
+    
+    pacient: Mapped[list["Pacient"]] = relationship(back_populates="hospital_report_entries", cascade="all")
+    # pacient: Mapped["Pacient"] = relationship(back_populates="lab_bio_entries", cascade="all")
 
+    
     def __repr__(self) -> str:
         return (
             f"HospitalReport(serial={self.serial}, datum={self.datum}, "

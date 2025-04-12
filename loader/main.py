@@ -25,7 +25,7 @@ def main():
                     joinedload(Pacient.lab_bio_entries),
                     joinedload(Pacient.lab_hem_entries),
                     joinedload(Pacient.report_entries),
-                    joinedload(Pacient.rengen_entries)
+                    joinedload(Pacient.rentgen_entries)
                 )
             )
 
