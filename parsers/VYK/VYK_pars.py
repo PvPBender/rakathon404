@@ -127,6 +127,8 @@ def drop_empty_columns(df, name):
     return df_cleaned
 
 
+
+CUR_DIR = os.path.dirname(__file__)
 # === main ===
 def parse() -> list[any]:
     """
@@ -134,8 +136,7 @@ def parse() -> list[any]:
     It should use parseFile to parse each file to avoid code duplication
     """
 
-
-    if not os.path.exists("vykony_kody_nazvy.csv"):
+    if not os.path.exists(os.path.join(CUR_DIR, "vykony_kody_nazvy.csv")):
         extract_codes_names(os.path.join(os.getcwd(), "parsers/VYK/Vyhlaska.xlsx"))
         
     df_vykony_all = pd.DataFrame()
@@ -154,7 +155,7 @@ def parse() -> list[any]:
     
     df_vykony_annotated = annotate_vykony_with_names(
         vykony_csv_or_df=df_vykony_all,
-        kod_ciselnik = "vykony_kody_nazvy.csv",#os.path.join(OUTPUT_PATH, "vykony_kody_nazvy.csv"),
+        kod_ciselnik = os.path.join(CUR_DIR, "vykony_kody_nazvy.csv"),
         output_csv = os.path.join(OUTPUT_PATH, "vykony_annotated.csv")
     )
 
