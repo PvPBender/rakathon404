@@ -1,14 +1,35 @@
 import pandas as pd
 import logging
-import os
+import numpy as np
+from add_typ_lecby import annotate_vykony_with_names
 
-# Nastavení logování
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
+
 def load_and_prepare_data(year):
+    """
+    Loads and preprocesses data files for the given year from the directory `data/DATA/VYK_{year}/`.
+
+    The function performs the following steps:
+    - Loads CSV files 'material', 'vykony', and 'vykpac' using cp1250 encoding and `;` as the delimiter.
+    - Strips whitespace from identifier columns (`CISPAC`, `CDOKL`, `KOD`).
+    - Converts the 'DATUM' column to datetime format and logs any conversion errors.
+    - Attempts to automatically convert `object` columns to numeric types; otherwise, strips whitespace.
+    - Merges `vykony` and `material` data with `vykpac` based on the `CDOKL` column.
+    - Adds a `ROK` column containing the current year.
+
+    Parameters:
+    year (int): The year for which the data should be loaded and processed.
+
+    Returns:
+    tuple: (df_vykony_full, df_material_full) – the merged and preprocessed DataFrame objects,
+           or `None` if loading fails.
+    """
+
     path = f"data/DATA/VYK_{year}/"
     material_path = path + f"vyk_{year}_material.csv"
     vykony_path = path + f"vyk_{year}_vykony.csv"
@@ -23,14 +44,16 @@ def load_and_prepare_data(year):
         df_material = None
 
     try:
-        df_vykony = pd.read_csv(vykony_path, sep=";", encoding="cp1250", low_memory=False)
+        df_vykony = pd.read_csv(vykony_path, sep=";", encoding="cp1250",
+                                low_memory=False)
         logging.info(f"[{year}] Soubor 'vykony' načten: {df_vykony.shape}")
     except Exception as e:
         logging.error(f"[{year}] Chyba při načítání vykony: {e}")
         df_vykony = None
 
     try:
-        df_vykpac = pd.read_csv(vykpac_path, sep=";", encoding="cp1250", low_memory=False)
+        df_vykpac = pd.read_csv(vykpac_path, sep=";", encoding="cp1250",
+                                low_memory=False)
         logging.info(f"[{year}] Soubor 'vykpac' načten: {df_vykpac.shape}")
     except Exception as e:
         logging.error(f"[{year}] Chyba při načítání vykpac: {e}")
@@ -50,10 +73,12 @@ def load_and_prepare_data(year):
 
     for name, df in zip(["material", "vykony"], [df_material, df_vykony]):
         if df is not None:
-            df["DATUM"] = pd.to_datetime(df["DATUM"], dayfirst=True, errors="coerce")
+            df["DATUM"] = pd.to_datetime(df["DATUM"], dayfirst=True,
+                                         errors="coerce")
             n_missing = df["DATUM"].isna().sum()
             if n_missing > 0:
-                logging.warning(f"[{year}] {name}: {n_missing} hodnot DATUM nebylo možné převést.")
+                logging.warning(
+                    f"[{year}] {name}: {n_missing} hodnot DATUM nebylo možné převést.")
 
     def auto_convert_object_columns(df, name=""):
         logging.info(f"[{year}] Převádím object sloupce v tabulce '{name}'...")
@@ -98,21 +123,49 @@ def load_and_prepare_data(year):
 
     return df_vykony_full, df_material_full
 
-# Zpracování dat pro roky 2023 a 2024
+
+
+def drop_empty_columns(df, name):
+    """
+    Removes columns from the DataFrame that are entirely empty.
+
+    Empty values are defined broadly to include standard missing value indicators
+    like empty strings, 'NULL', 'n/a', etc. These are replaced with np.nan,
+    and then columns that contain only np.nan are dropped.
+
+    Parameters:
+    df (pd.DataFrame): The input DataFrame to clean.
+    name (str): A name identifier for logging purposes.
+
+    Returns:
+    pd.DataFrame: The cleaned DataFrame with empty columns removed.
+    """
+    n_cols_before = df.shape[1]
+
+    null_equivalents = ["", " ", "  ", "<null>", "NULL", "N/A", "n/a", "None",
+                        "nan", "NaN"]
+    df_cleaned = df.replace(null_equivalents, np.nan).infer_objects(copy=False)
+
+    df_cleaned = df_cleaned.dropna(axis=1, how="all")
+
+    n_removed = n_cols_before - df_cleaned.shape[1]
+    logging.info(f"Table '{name}': removed {n_removed} empty columns.")
+
+    return df_cleaned
+
+
 df_vykony_23, df_material_23 = load_and_prepare_data(23)
 df_vykony_24, df_material_24 = load_and_prepare_data(24)
 
-# Spojení všech dat
+
+df_vykony_23 = drop_empty_columns(df_vykony_23, "vykony_23")
+df_vykony_24 = drop_empty_columns(df_vykony_24, "vykony_24")
+df_material_23 = drop_empty_columns(df_material_23, "material_23")
+df_material_24 = drop_empty_columns(df_material_24, "material_24")
+
+
 df_vykony_all = pd.concat([df_vykony_23, df_vykony_24], ignore_index=True)
-df_material_all = pd.concat([df_material_23, df_material_24], ignore_index=True)
-
-
-output_path = "data/processed/"
-os.makedirs(output_path, exist_ok=True)
-
-df_vykony_all.to_csv(os.path.join(output_path, "vykony_all.csv"), index=False, sep=";", encoding="utf-8")
-df_material_all.to_csv(os.path.join(output_path, "material_all.csv"), index=False, sep=";", encoding="utf-8")
-
-logging.info("Spojené tabulky uloženy:")
-logging.info(f"- {output_path}vykony_all.csv")
-logging.info(f"- {output_path}material_all.csv")
+df_material_all = pd.concat([df_material_23, df_material_24],
+                            ignore_index=True)
+df_vykony_all = annotate_vykony_with_names(df_vykony_all)
+df_material_all = annotate_vykony_with_names(df_material_all)

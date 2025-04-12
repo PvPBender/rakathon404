@@ -1,2 +1,5 @@
 /data
+!data/vykony_kody_nazvy.csv
+!data/processed
+
 .venv
