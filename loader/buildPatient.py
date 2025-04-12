@@ -1,12 +1,13 @@
 import pandas as pd
 from model.patientTemplate import PacientTemplate, IdentifikatorPacienta
+from model.patientTemplateModuleC import PacientTemplateModuleC
 
 from db.tables.Pacient import Pacient
 from loader.handlePat import handlePat
 from loader.handleBio import handleBio
 from loader.handleHem import handleHem
 from loader.handleReport import handleReport
-from loader.handleRengen import handleRengen
+from loader.handleRentgen import handleRentgen
 
 from model.patientTemplateModuleA import MA1
 
@@ -33,13 +34,13 @@ def loadDataToPatient(patient: PacientTemplate, pacient_data: Pacient):
     for biolab_entry in pacient_data.lab_bio_entries:
         handleBio(biolab_entry, patient)
 
-    for labhem_entry in pacient_data.lab_hem_entries:
-        handleHem(labhem_entry, patient)
+    for hemlab_entry in pacient_data.lab_hem_entries:
+        handleHem(hemlab_entry, patient)
 
     for report_entry in pacient_data.report_entries:
         handleReport(report_entry, patient)
 
-    for rengen_entry in pacient_data.rengen_entries:
-        handleRengen(rengen_entry, patient)
+    for rentgen_entry in pacient_data.rentgen_entries:
+        handleRentgen(rentgen_entry, patient)
 
     return patient

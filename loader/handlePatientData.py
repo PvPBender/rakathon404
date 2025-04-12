@@ -1,5 +1,6 @@
 import pandas as pd
 from model.patientTemplate import PacientTemplate
+from db.tables.HospitalReport import HospitalReport
 
-def handlePatientData(df: pd.DataFrame, patient: PacientTemplate):
+def handlePatientData(hospital_report: list[HospitalReport], patient: PacientTemplate):
     return patient

@@ -820,14 +820,17 @@ class PacientTemplateModuleC:
     """
     Main class for Module C that encapsulates all treatment-related data.
     """
-    M_C_2: List[MC2] = field(default_factory=list)  # Chirurgická léčba
-    M_C_3: List[MC3] = field(default_factory=list)  # Chemoterapie
-    M_C_4: List[MC4] = field(default_factory=list)  # Radioterapie
-    M_C_5: List[MC5] = field(default_factory=list)  # Cílená léčba
-    M_C_6: List[MC6] = field(default_factory=list)  # Hormonoterapie
-    M_C_7: List[MC7] = field(default_factory=list)  # Imunoterapie
-    M_C_8: List[MC8] = field(default_factory=list)  # Cytokinová terapie
-    M_C_9: List[MC9] = field(default_factory=list)  # Jiné léčebné modality
-    M_C_10: Optional[MC10] = None  # Léčebná odpověď
-    M_C_11: List[MC11] = field(default_factory=list)  # Závažná toxicita
-    M_C_12: List[MC12] = field(default_factory=list)  # Klinické studie
+        # M_B_2_1: Optional["MB21"] = None  # Nádory CNS
+
+    M_C_2: Optional["MC2"] = None  # Chirurgická léčba
+    M_C_3: Optional["MC3"] = None  # Chemoterapie
+    M_C_4: Optional["MC4"] = None  # Radioterapie
+    M_C_5: Optional["MC5"] = None  # Cílená léčba
+    M_C_6: Optional["MC6"] = field(default_factory=list)  # Hormonoterapie
+    M_C_7: Optional["MC7"] = field(default_factory=list)  # Imunoterapie
+    M_C_8: Optional["MC8"] = field(default_factory=list)  # Cytokinová terapie
+    M_C_9: Optional["MC9"] = field(default_factory=list)  # Jiné léčebné modifity
+    M_C_10: Optional["MC10"] = field(default_factory=list)  # Léčebná odpověď
+    M_C_11: Optional["MC11"] = field(default_factory=list)  # Závažná toxicita
+    M_C_12: Optional["MC12"] = field(default_factory=list)  # Klinické studie
+    

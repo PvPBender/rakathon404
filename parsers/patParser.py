@@ -1,22 +1,12 @@
 #!/usr/bin/env python
 import os
 import pandas as pd
-from parsers.utils import readFile, pathTo
+from parsers.utils import readFile, pathTo, clean_datetime_columns
 
 OUTPUT_PATH = pathTo('parsers', 'parsed', 'PAT')
 BASE_PATH = pathTo('data','DATA','PAT')
 
 NUM_COLS = 22  # We expect 22 columns => 21 commas
-
-def clean_datetime_columns(df: pd.DataFrame, datetime_columns: list) -> pd.DataFrame:
-    """
-    Cleans datetime columns by ensuring the correct datetime format for MySQL.
-    """
-    for col in datetime_columns:
-        if col in df.columns:
-            # Convert to datetime and format as 'YYYY-MM-DD HH:MM:SS'
-            df[col] = pd.to_datetime(df[col], errors='coerce').dt.strftime('%Y-%m-%d %H:%M:%S')
-    return df
 
 def parse_csv_char_by_char(data, expected_num_cols):
     rows = []
@@ -158,10 +148,12 @@ def parse() -> pd.DataFrame:
     """
     df = pd.DataFrame()
     for file in os.listdir(BASE_PATH):
-        print(f"Parsing file: {file}")
         if "pat" in file.lower():
+            print(f"Parsing file: {file}")
             parsed = parseFile(os.path.join(BASE_PATH, file), file)
             df = pd.concat([df, parsed])
+        else:
+            print(f"Skipping file: {file}")
 
     return df 
 

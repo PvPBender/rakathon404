@@ -18,10 +18,12 @@ class Pacient(Base):
     gender: Mapped[Gender] = mapped_column(Enum(Gender), nullable=True)  # "POHLAVI"
 
     pat_entries: Mapped[list["Patolog"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
-    lab_bio_entries: Mapped[list["BioLab"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
-    lab_hem_entries: Mapped[list["LabHem"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
-    report_entries: Mapped[list["Report"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
-    rengen_entries: Mapped[list["Rengen"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    # lab_bio_entries: Mapped[list["BioLab"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    # lab_hem_entries: Mapped[list["HemLab"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    report_entries: Mapped[list["Report"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")   
+    rentgen_entries: Mapped[list["Rentgen"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    hospital_report_entries: Mapped[list["HospitalReport"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    annotated_perf_entries: Mapped[list["AnnotatedPerformance"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
 
 
     def __repr__(self) -> str:

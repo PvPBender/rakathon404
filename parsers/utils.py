@@ -1,6 +1,7 @@
 import re
 from parsers.User import User
 from pathlib import Path
+import pandas as pd
 
 def readFile(path):
     """
@@ -34,3 +35,14 @@ def pathTo(*paths) -> Path:
     Joins the given paths to the project root directory.
     """
     return projectRoot().joinpath(*paths)
+
+    
+def clean_datetime_columns(df: pd.DataFrame, datetime_columns: list) -> pd.DataFrame:
+    """
+    Cleans datetime columns by ensuring the correct datetime format for MySQL.
+    """
+    for col in datetime_columns:
+        if col in df.columns:
+            # Convert to datetime and format as 'YYYY-MM-DD HH:MM:SS'
+            df[col] = pd.to_datetime(df[col], errors='coerce').dt.strftime('%Y-%m-%d %H:%M:%S')
+    return df
