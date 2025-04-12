@@ -14,8 +14,8 @@ class Pacient(Base):
     __tablename__ = "Pacient"
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
-    year: Mapped[int]
-    gender: Mapped[Gender] = mapped_column(Enum(Gender))
+    year: Mapped[int] = mapped_column(Text, nullable=True)  # "ROK"
+    gender: Mapped[Gender] = mapped_column(Enum(Gender), nullable=True)  # "POHLAVI"
 
     pat_entries: Mapped[list["Patolog"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
     lab_bio_entries: Mapped[list["BioLab"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")

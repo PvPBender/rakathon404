@@ -33,11 +33,11 @@ class Patolog(Base):
     klindg: Mapped[str] = mapped_column(Text, nullable=True)      # "KLINDG"
     text: Mapped[str] = mapped_column(Text, nullable=True)        # "TEXT"
 
-    pacient: Mapped[list["Pacient"]] = relationship(back_populates="pat_entries", cascade="all, delete-orphan")
+    pacient: Mapped[list["Pacient"]] = relationship(back_populates="pat_entries", cascade="all")
 
     def __repr__(self) -> str:
         return (
-            f"Pacient("
+            f"Patolog("
             f"cispac={self.cispac!r}, "
             f"subsystem={self.subsystem!r}, "
             f"rok={self.rok!r}, "
