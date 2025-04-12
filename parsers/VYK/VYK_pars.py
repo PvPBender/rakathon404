@@ -1,9 +1,10 @@
 import logging
 import os
-import requests
-import pandas as pd
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import requests
 
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
 
@@ -74,7 +75,8 @@ def load_and_prepare_data(year):
                     f"[{year}] {name}: {n_missing} values of DATE could not be converted.")
 
     def auto_convert_object_columns(df, name=""):
-        logging.info(f"[{year}] Converting object columns in table '{name}'...")
+        logging.info(
+            f"[{year}] Converting object columns in table '{name}'...")
         for col in df.columns:
             if df[col].dtype == "object":
                 try:
@@ -126,8 +128,6 @@ def drop_empty_columns(df, name):
     n_removed = n_cols_before - df_cleaned.shape[1]
     logging.info(f"Table '{name}': removed {n_removed} empty columns.")
     return df_cleaned
-
-
 
 
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
