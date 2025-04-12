@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from db.database import connect
 
 class LabHem(Base):
-    __tablename__ = "LabHem"
+    __tablename__ = "HemLab"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, unique=True)  # "ID" as ID
     cispac: Mapped[int] = mapped_column(Integer, ForeignKey('Pacient.id'))  # "CISPAC" as ID
@@ -37,7 +37,7 @@ class LabHem(Base):
     valdescr: Mapped[str] = mapped_column(Text, nullable=True)       # VALDESCR
     machine: Mapped[str] = mapped_column(Text, nullable=True)        # MACHINE
 
-    pacient: Mapped["Pacient"] = relationship(back_populates="lab_hem_entries", cascade="all")
+    #pacient: Mapped["Pacient"] = relationship(back_populates="lab_hem_entries", cascade="all")
     # pacient: Mapped[list["Pacient"]] = relationship(back_populates="pat_entries", cascade="all")
 
 
