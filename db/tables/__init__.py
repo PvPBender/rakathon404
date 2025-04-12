@@ -5,3 +5,4 @@ from db.tables.LabHem import LabHem
 from db.tables.Patolog import Patolog
 from db.tables.Report import Report, ReportType
 from db.tables.Rentgen import Rentgen
+from db.tables.HospitalReport import HospitalReport

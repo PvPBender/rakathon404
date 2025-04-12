@@ -22,7 +22,7 @@ class Pacient(Base):
     lab_hem_entries: Mapped[list["LabHem"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
     report_entries: Mapped[list["Report"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")   
     rentgen_entries: Mapped[list["Rentgen"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
-    # hospital_report_entries: Mapped[list["hospital_report"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    hospital_report_entries: Mapped[list["HospitalReport"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
 
 
     def __repr__(self) -> str:
