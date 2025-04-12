@@ -1,7 +1,7 @@
 from model.patientTemplate import PacientTemplate
-from db.tables.Rengen import Rengen
+from db.tables.Rentgen import Rentgen
 
-def handleRengen(rengen_entry: Rengen, patient: PacientTemplate):
-    # Basic handling of Rengen data
+def handleRentgen(rentgen_entry: Rentgen, patient: PacientTemplate):
+    # Basic handling of Rentgen data
     # Add your specific handling logic here
     pass 

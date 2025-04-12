@@ -34,7 +34,7 @@ def main():
                 logging.info(f"BioLab entries: {pacient_data.lab_bio_entries}")
                 logging.info(f"HemLab entries: {pacient_data.lab_hem_entries}")
                 logging.info(f"Report entries: {pacient_data.report_entries}")
-                logging.info(f"Rengen entries: {pacient_data.rengen_entries}")
+                logging.info(f"Rentgen entries: {pacient_data.rentgen_entries}")
 
             patient = build_patient(cispac_value)
             patient = loadDataToPatient(patient, pacient_data)

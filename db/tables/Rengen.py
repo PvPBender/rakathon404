@@ -8,12 +8,13 @@ from sqlalchemy import Text, Integer, DateTime, ForeignKey
 ODDEL,CISPAC,POHLAVI,DG1,DG2,DG3,DG4,DG5,DGKOMENT,DATUM,PROODBORNOST,NALUZKUPRIM,TXT1,ODDELZPRACOVAL,POPIS,TYPSUBJEKTU,KODSUBJEKTU,PRAC,CISRTGPRAC,PRISTROJ,TXT2,POZNVYS,CISZAD1,VYSKA,HMOTNOST,VYSETRMETD,VYSLDAT,POPIS_POZNAMKA,CISPAC.1,RTG_DATA_CONTENT 
 """
 
-class Rengen(Base):
-    __tablename__ = "Rengen"
+class Rentgen(Base):
+    __tablename__ = "Rentgen"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, unique=True)
-    oddel: Mapped[str] = mapped_column(Text, nullable=True)  # "ODDEL"
     cispac: Mapped[int] = mapped_column(Integer, ForeignKey('Pacient.id'))  # "CISPAC"
+
+    oddel: Mapped[str] = mapped_column(Text, nullable=True)  # "ODDEL"
     pohlavi: Mapped[str] = mapped_column(Text, nullable=True)  # "POHLAVI"
     dg1: Mapped[str] = mapped_column(Text, nullable=True)  # "DG1"
     dg2: Mapped[str] = mapped_column(Text, nullable=True)  # "DG2"
@@ -43,11 +44,11 @@ class Rengen(Base):
     cispac_1: Mapped[int] = mapped_column(Integer, nullable=True)  # "CISPAC.1"
     rtg_data_content: Mapped[str] = mapped_column(Text, nullable=True)  # "RTG_DATA_CONTENT"
 
-    pacient: Mapped[list["Pacient"]] = relationship(back_populates="rengen_entries", cascade="all, delete-orphan")
+    pacient: Mapped[list["Pacient"]] = relationship(back_populates="rentgen_entries", cascade="all")
 
     def __repr__(self) -> str:
         return (
-            f"Rengen("
+            f"Rentgen("
             f"id={self.id!r}, "
             f"cispac={self.cispac!r}, "
             f"datum={self.datum!r}, "

@@ -6,7 +6,7 @@ from loader.handlePat import handlePat
 from loader.handleBio import handleBio
 from loader.handleHem import handleHem
 from loader.handleReport import handleReport
-from loader.handleRengen import handleRengen
+from loader.handleRentgen import handleRentgen
 
 from model.patientTemplateModuleA import MA1
 
@@ -30,7 +30,7 @@ def loadDataToPatient(patient: PacientTemplate, pacient_data: Pacient):
     for report_entry in pacient_data.report_entries:
         handleReport(report_entry, patient)
 
-    for rengen_entry in pacient_data.rengen_entries:
-        handleRengen(rengen_entry, patient)
+    for rentgen_entry in pacient_data.rentgen_entries:
+        handleRentgen(rentgen_entry, patient)
 
     return patient
