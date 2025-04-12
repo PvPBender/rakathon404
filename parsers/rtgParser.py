@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import datetime
 import logging
-from parsers.utils import pathTo
+from parsers.utils import pathTo, clean_datetime_columns
 
 
 
@@ -105,6 +105,13 @@ def parseFile(file: str, fileName: str | None) -> list[str]:
         # Use pandas to read the CSV, specifying separator and quote character.
         # low_memory=False can help with mixed data types but uses more memory.
         df = pd.read_csv(file, encoding='windows-1250', low_memory=False, sep=',', quotechar='"')
+        df.drop(columns=["CISPAC"], inplace=True)
+        df.rename(columns={'CISPAC.1': 'CISPAC'}, inplace=True)
+        
+        print("Cleaning date time columns...")
+        datetime_columns = ['DATUM', "VYSLDAT"]
+        df = clean_datetime_columns(df, datetime_columns)
+
     except UnicodeDecodeError:
         raise ValueError(f"Failed to read CSV {file} with encoding windows-1250")
     except Exception as e:
@@ -142,15 +149,15 @@ def parse() -> pd.DataFrame:
     if not os.path.exists(RTG_DATA_DIR):
         logging.warning(f"Data directory not found at: {RTG_DATA_DIR}. Content linking will fail.")
 
-    entries = []
+    df = pd.DataFrame()
     for file in os.listdir(BASE_PATH):
         if "rentgen" in file.lower():
             print(f"Parsing file: {file}")
-            df = parseFile(BASE_PATH / file, file)
-            entries.append(df)
+            parsed = parseFile(BASE_PATH / file, file)
+            df = pd.concat([df, parsed])
         else:
             print(f"Skipping file: {file}")
-
+    return df
 
 # --- Main Execution ---
 if __name__ == "__main__":
