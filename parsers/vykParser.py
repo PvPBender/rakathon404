@@ -1,4 +1,4 @@
-from pathlib import Path
+from typing import Tuple
 import pandas as pd
 import numpy as np
 import logging
@@ -149,9 +149,10 @@ def extract_codes_names_from_url_to_csv(url: str, csv_path: str) -> None:
     os.remove(os.path.join(CUR_DIR, "temp.xlsx"))
 
 
-def parse() -> list:
+def parse() -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Parses all files that are for this parser and returns a list of parsed data.
+    returns Tuple of DataFrames: (df_vykony_annotated, df_material_all)
     """
 
     csv_path = pathTo("parsers/VYK/vykony_kody_nazvy.csv")
@@ -179,14 +180,18 @@ def parse() -> list:
     df_vykony_annotated = annotate_vykony_with_names(
         vykony_csv_or_df=df_vykony_all,
         kod_ciselnik=csv_path,
-        output_csv=os.path.join(OUTPUT_PATH, "vykony_annotated.csv")
+        output_csv=OUTPUT_PATH / "vykony_annotated.csv"
     )
 
-    df_material_all.to_csv(os.path.join(OUTPUT_PATH, "material_all.csv"),
-                           index=False)
+    df_material_all.to_csv(OUTPUT_PATH / "material_all.csv", index=False)
 
-    return df_vykony_annotated
+    return df_vykony_annotated, df_material_all
 
+def getParsed() -> Tuple[pd.DataFrame, pd.DataFrame]:
+    df_annotated = pd.read_csv(OUTPUT_PATH / "vykony_annotated.csv")
+    df_material = pd.read_csv(OUTPUT_PATH / "material_all.csv")
+
+    return df_annotated, df_material
 
 if __name__ == "__main__":
     parse()
