@@ -4,11 +4,14 @@ import os
 import numpy as np
 from pathlib import Path
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
+from parsers.VYK.extract_codes_names import extract_codes_names
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
+
+OUTPUT_PATH = os.getcwd() + '/parsers/parsed/'
 
 
 def get_data_paths(year):
@@ -124,25 +127,45 @@ def drop_empty_columns(df, name):
     return df_cleaned
 
 
+
+CUR_DIR = os.path.dirname(__file__)
 # === main ===
+def parse() -> list[any]:
+    """
+    Parses all files that are for this parser and returns a list of parsed data
+    It should use parseFile to parse each file to avoid code duplication
+    """
 
-df_vykony_23, df_material_23 = load_and_prepare_data(23)
-df_vykony_24, df_material_24 = load_and_prepare_data(24)
+    if not os.path.exists(os.path.join(CUR_DIR, "vykony_kody_nazvy.csv")):
+        extract_codes_names(os.path.join(os.getcwd(), "parsers/VYK/Vyhlaska.xlsx"))
+        
+    df_vykony_all = pd.DataFrame()
+    df_material_all = pd.DataFrame()
 
-df_vykony_23 = drop_empty_columns(df_vykony_23, "vykony_23")
-df_vykony_24 = drop_empty_columns(df_vykony_24, "vykony_24")
-df_material_23 = drop_empty_columns(df_material_23, "material_23")
-df_material_24 = drop_empty_columns(df_material_24, "material_24")
+    for year in [23, 24]:
+        df_vykony, df_material = load_and_prepare_data(year)
 
-df_vykony_all = pd.concat([df_vykony_23, df_vykony_24], ignore_index=True)
-df_material_all = pd.concat([df_material_23, df_material_24],
-                            ignore_index=True)
+        df_vykony = drop_empty_columns(df_vykony, f"vykony_{year}")
+        df_material = drop_empty_columns(df_material, f"material_{year}")
+
+        df_vykony_all = pd.concat([df_vykony_all, df_vykony], ignore_index=True)
+        df_material_all = pd.concat([df_material_all, df_material], ignore_index=True)
+
+    
+    
+    df_vykony_annotated = annotate_vykony_with_names(
+        vykony_csv_or_df=df_vykony_all,
+        kod_ciselnik = os.path.join(CUR_DIR, "vykony_kody_nazvy.csv"),
+        output_csv = os.path.join(OUTPUT_PATH, "vykony_annotated.csv")
+    )
+
+    file_path = os.path.join(OUTPUT_PATH, "material_all.csv")
+    df_material_all.to_csv(file_path, index=False)
+
+    return df_vykony_annotated
 
 
 
-df_vykony_annotated = annotate_vykony_with_names(
-    vykony_csv_or_df=df_vykony_all,
-    kod_ciselnik="vykony_kody_nazvy.csv",
-    output_csv="vykony_annotated.csv"
-)
 
+if __name__ == "__main__":
+    parse()
