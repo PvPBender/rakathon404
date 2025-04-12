@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
-from model.patientTemplateModuleA import PacientTemplateModuleA as M_A
+from model.patientTemplateModuleA import PacientTemplateModuleA as MA
+from model.patientTemplateModuleB1 import PacientTemplateModuleB1 as MB1
+from model.patientTemplateModuleB2 import PacientTemplateModuleB2 as MB2
+from model.patientTemplateModuleC import PacientTemplateModuleC as MC
 
 @dataclass
 class AnoNeUdaje:
@@ -41,4 +44,7 @@ class M_1:  # Hlavička dokumentu
 @dataclass
 class PacientTemplate:
     M_1: M_1                     # Hlavička dokumentu – 1..1
-    M_A: M_A                     # Pacient – 1..1
+    M_A: MA                     # Pacient – 1..1
+    M_B1: MB1                   # Pacient – 1..1
+    M_B2: Optional[List[MB2]] = field(default_factory=list)
+    M_C: Optional[List[MC]] = field(default_factory=list)
