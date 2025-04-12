@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import re
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 BASE_PATH = os.path.join(PROJECT_ROOT, 'DATA/DATA/PAT/PATOL202504101802.csv')
 OUTPUT_PATH = os.path.join(PROJECT_ROOT, 'DATA/DATA/PAT/PATOL_parsed.csv')
 
