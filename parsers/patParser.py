@@ -137,17 +137,18 @@ def parseFile(file: str, fileName: str | None):
 
     return df
 
-def parse():
+def parse() -> pd.DataFrame:
     """"
     Parses all files in a directory
     """
-
-    entries = []
+    df = pd.DataFrame()
     for file in os.listdir(BASE_PATH):
         print(f"Parsing file: {file}")
         if "pat" in file.lower():
-            df = parseFile(os.path.join(BASE_PATH, file), file)
-            entries.append(df)
+            parsed = parseFile(os.path.join(BASE_PATH, file), file)
+            df = pd.concat([df, parsed])
+
+    return df 
 
 if __name__ == "__main__":
     # try:
