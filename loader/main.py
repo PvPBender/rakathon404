@@ -6,16 +6,17 @@ from db.database import connect
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import joinedload
 from sqlalchemy.future import select
-from db.tables.Patient import Pacient
+from db.tables.Pacient import Pacient
 import logging
 from datetime import datetime
 
 def main():
-    cispac_value = int("YOUR_CISPAC_VALUE")
+    cispac_value = 98332
+    patient = build_patient(cispac_value)
 
     try:
-        connection = connect()
-        with Session(bind=connection) as session:
+        connection, engine = connect()
+        with Session(bind=engine) as session:
             stmt = (
                 select(Pacient)
                 .where(Pacient.id == cispac_value)
@@ -24,10 +25,13 @@ def main():
                     joinedload(Pacient.lab_bio_entries),
                     joinedload(Pacient.lab_hem_entries),
                     joinedload(Pacient.report_entries),
+                    joinedload(Pacient.rengen_entries)
                 )
             )
 
-            pacient_data = session.execute(stmt).scalar_one_or_none()
+            pacient_data = session.execute(stmt).unique().scalar_one_or_none()
+
+            print(f"Pacient data: {pacient_data.pat_entries}")
 
             if pacient_data:
                 logging.info(f"Patolog entries: {pacient_data.pat_entries}")
@@ -36,7 +40,6 @@ def main():
                 logging.info(f"Report entries: {pacient_data.report_entries}")
                 logging.info(f"Rentgen entries: {pacient_data.rentgen_entries}")
 
-            patient = build_patient(cispac_value)
             patient = loadDataToPatient(patient, pacient_data)
             
         savePatient(f"patient_{cispac_value}.json", patient)

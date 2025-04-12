@@ -2,6 +2,7 @@ import pandas as pd
 from model.patientTemplate import PacientTemplate
 import logging
 
-def handlePat(df: pd.DataFrame, patient: PacientTemplate):
-    logging.info(f"Handling PAT: {df}")
+def handlePat(pat_entry, patient: PacientTemplate):
+    logging.info(f"Handling PAT: {pat_entry}")
+
     return patient
