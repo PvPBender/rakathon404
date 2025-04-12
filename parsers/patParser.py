@@ -71,7 +71,7 @@ def parse_csv_char_by_char(data, expected_num_cols):
 
     return rows
 
-def parse():
+def parseFile(file: str, fileName: str):
     """
     Parses all files that are for this parser and returns a list of parsed data
     It should use parseFile to parse each file to avoid code duplication
@@ -139,10 +139,21 @@ def parse():
     print(f"\nParsed {len(df)} rows. Saved parsed data to: {OUTPUT_PATH}")
     return df
 
+def parse():
+    """"
+    Parses all files in a directory
+    """
+    dir = PROJECT_ROOT + "/DATA/DATA/PAT/"
+    for file in os.listdir(dir):
+        print(f"Parsing file: {file}")
+        if file.startswith("PATOL"):
+            df = parseFile(dir + file, file)
+            df.to_csv(OUTPUT_PATH, index=False, encoding='utf-8')
+
 
 if __name__ == "__main__":
     try:
-        df = parse()
+        df = parseFile(BASE_PATH, "PATOL202504101802.csv")
         print(f"Reading file from: {BASE_PATH}")
         print(df.head(12))
         print("\nDataFrame Info:")
