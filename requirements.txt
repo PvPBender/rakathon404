@@ -1,3 +1,5 @@
+openpyxl
+pandas~=2.2.3
 decorator==5.2.1
 matplotlib==3.9.2
 matplotlib-inline==0.1.7
