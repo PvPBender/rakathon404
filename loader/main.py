@@ -10,29 +10,11 @@ from db.tables.Patient import Pacient
 import logging
 from datetime import datetime
 
-def compare_dates(date1: datetime, date2: datetime) -> str:
-    """
-    Compare two datetime objects and return a string describing their relationship
-    """
-    if date1 > date2:
-        return f"{date1} is after {date2}"
-    elif date1 < date2:
-        return f"{date1} is before {date2}"
-    else:
-        return f"{date1} is equal to {date2}"
-
 def main():
     cispac_value = int("YOUR_CISPAC_VALUE")
 
     try:
         connection = connect()
-
-        # Example datetime comparison
-        date1 = datetime(2024, 3, 15)
-        date2 = datetime(2024, 3, 20)
-        comparison_result = compare_dates(date1, date2)
-        logging.info(comparison_result)
-
         with Session(bind=connection) as session:
             stmt = (
                 select(Pacient)
