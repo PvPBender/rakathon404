@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
 from sqlalchemy import String, Float, Integer, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .Base import Base
 
 
@@ -24,7 +24,10 @@ class HospitalReport(Base):
     cispac: Mapped[int] = mapped_column(Integer, nullable=True)
     cispac_z_uctu: Mapped[float] = mapped_column(Float, nullable=True)
     rok: Mapped[int] = mapped_column(Integer, nullable=True)
+    
+    pacient: Mapped[list["Pacient"]] = relationship(back_populates="hospital_report_entries", cascade="all")
 
+    
     def __repr__(self) -> str:
         return (
             f"HospitalReport(serial={self.serial}, datum={self.datum}, "
