@@ -20,15 +20,8 @@ from sqlalchemy.future import select
 from db.tables.Patient import Pacient
 
 
-
-def load_filtered(connection, table_name, column_name, cispac_value):
-    query = text(f"SELECT * FROM {table_name} WHERE {column_name} = :cispac")
-    result = connection.execute(query, {"cispac": cispac_value})
-    return [dict(row) for row in result]
-
-
 def main():
-    
+
     cispac_value = int("YOUR_CISPAC_VALUE")
 
     try:
@@ -46,7 +39,7 @@ def main():
                     joinedload(Pacient.report_entries),
                 )
             )
-            
+
             pacient = session.execute(stmt).scalar_one_or_none()
 
             if pacient:
@@ -54,7 +47,6 @@ def main():
                 logging.info(f"BioLab entries: {pacient.lab_bio_entries}")
                 logging.info(f"LabHem entries: {pacient.lab_hem_entries}")
                 logging.info(f"Report entries: {pacient.report_entries}")
-
 
             patient = build_patient(cispac_value)
 
@@ -65,14 +57,16 @@ def main():
                 handleBio(biolab_entry, patient)
 
             for labhem_entry in pacient.lab_hem_entries:
-                handleHem(labhem_entry, patient)    
-            
+                handleHem(labhem_entry, patient)
+
             for report_entry in pacient.report_entries:
                 handleReport(report_entry, patient)
+
         savePatient(f"patient_{cispac_value}.json", patient)
-          
+
     except SQLAlchemyError as e:
         print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     main()
