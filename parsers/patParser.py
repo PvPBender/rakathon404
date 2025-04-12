@@ -3,10 +3,12 @@
 import os
 import pandas as pd
 import re
+from .utils import readFile
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-BASE_PATH = os.path.join(PROJECT_ROOT, 'DATA/DATA/PAT/PATOL202504101802.csv')
-OUTPUT_PATH = os.path.join(PROJECT_ROOT, 'DATA/DATA/PAT/PATOL_parsed.csv')
+
+OUTPUT_PATH = os.getcwd() + '/parsers/parsed/PAT'
+BASE_PATH = os.getcwd() + "/data/DATA/PAT/"
 
 NUM_COLS = 22  # We expect 22 columns => 21 commas
 
@@ -99,13 +101,11 @@ def parseFile(file: str, fileName: str):
     - KLINDG: Klinicka diagnnoza - slovni popis
     - TEXT: slovni popis vysetreni
     """
-    if not os.path.exists(BASE_PATH):
-        raise FileNotFoundError(f"File not found at: {BASE_PATH}")
+    if not os.path.exists(OUTPUT_PATH):
+        os.makedirs(OUTPUT_PATH)
 
     # Read the entire file lines
-    with open(BASE_PATH, 'r', encoding='cp1250', errors='replace') as f:
-        all_lines = f.read().splitlines()
-
+    all_lines = readFile(file).splitlines()
     if not all_lines:
         raise ValueError("File is empty; no data found.")
 
@@ -134,21 +134,23 @@ def parseFile(file: str, fileName: str):
     if "TEXT" in df.columns:
         df["TEXT"] = df["TEXT"].str.replace(r'[\r\n\u2028\u2029]+', ' ', regex=True)
         df["TEXT"] = df["TEXT"].str.replace(r'[\r\n\u2028\u2029\x00-\x1F\x7F-\x9F\t]+', ' ', regex=True)
-    df.to_csv(OUTPUT_PATH, index=False, encoding='utf-8')
 
-    print(f"\nParsed {len(df)} rows. Saved parsed data to: {OUTPUT_PATH}")
+    outPath = os.path.join(OUTPUT_PATH, fileName.removeprefix("$"))
+    df.to_csv(outPath, index=False, encoding='utf-8')
+    print(f"\nParsed {len(df)} rows. Saved parsed data to: {outPath}")
+
     return df
 
 def parse():
     """"
     Parses all files in a directory
     """
-    dir = PROJECT_ROOT + "/DATA/DATA/PAT/"
-    for file in os.listdir(dir):
+
+    entries = []
+    for file in os.listdir(BASE_PATH):
         print(f"Parsing file: {file}")
-        if file.startswith("PATOL"):
-            df = parseFile(dir + file, file)
-            df.to_csv(OUTPUT_PATH, index=False, encoding='utf-8')
+        df = parseFile(os.path.join(BASE_PATH, file), file)
+        entries.append(df)
 
 
 if __name__ == "__main__":
