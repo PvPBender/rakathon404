@@ -2,8 +2,10 @@ import logging
 import json
 import openai
 
+
 from db.tables import Patolog
 from model.patientTemplate import PacientTemplate
+from model.patientTemplateModuleB1 import MB1
 from model.patientTemplateModuleB1 import (
     Lateralita, BiologickeChovani, TNM_CT, TNM_CN, TNM_CM
 )
@@ -72,12 +74,12 @@ def handlePat(pat_entry: Patolog, patient: PacientTemplate):
     patient.M_1.M_1_1.M_1_1_6 = pat_entry.pohlavi
 
     # MB1 – klasifikace a typ vzorku
-    patient.M_B.M_B_1.M_B_1_2_1 = pat_entry.dgpat or pat_entry.dg or pat_entry.dg1
-    patient.M_B.M_B_1.M_B_1_2_8 = pat_entry.typvzorku
+    patient.M_B1.M_B_1.M_B_1_2_1 = pat_entry.dgpat or pat_entry.dg or pat_entry.dg1
+    patient.M_B1.M_B_1.M_B_1_2_8 = pat_entry.typvzorku
 
     # MB1 – lateralita z lokalit
     lat_value = detect_lateralita(pat_entry.lokal1, pat_entry.lokal2, pat_entry.lokal3)
-    patient.M_B.M_B_1.M_B_1_2_5 = lat_value
+    patient.M_B1.M_B_1.M_B_1_2_5 = lat_value
 
     # ---- GPT – volný text ----
     fulltext = "\n".join(filter(None, [pat_entry.klindg, pat_entry.text]))
