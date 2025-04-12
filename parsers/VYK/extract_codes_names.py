@@ -2,6 +2,7 @@ import pandas as pd
 import logging
 import sys
 import os
+from parsers.utils import pathTo
 
 logging.basicConfig(
     level=logging.INFO,
@@ -12,7 +13,7 @@ logging.basicConfig(
     ]
 )
 
-output_path = os.getcwd() + "/parsers/VYK/vykony_kody_nazvy.csv"
+OUTPUT_PATH = pathTo("/parsers/VYK/vykony_kody_nazvy.csv")
 
 def extract_codes_names(excel_file: str):
     """
@@ -28,8 +29,8 @@ def extract_codes_names(excel_file: str):
     #os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     # Check output path
-    if os.path.isdir(output_path):
-        logging.error(f"'{output_path}' is a directory. Please provide a file name.")
+    if os.path.isdir(OUTPUT_PATH):
+        logging.error(f"'{OUTPUT_PATH}' is a directory. Please provide a file name.")
         sys.exit(1)
 
     try:
@@ -69,8 +70,8 @@ def extract_codes_names(excel_file: str):
         filtered_df.columns = ['code', 'name']
 
         # Save result
-        filtered_df.to_csv(output_path, index=False)
-        logging.info(f"Data successfully saved to: {output_path}")
+        filtered_df.to_csv(OUTPUT_PATH, index=False)
+        logging.info(f"Data successfully saved to: {OUTPUT_PATH}")
         logging.info(f"Extracted {len(filtered_df)} valid performance records.")
 
     except KeyError:

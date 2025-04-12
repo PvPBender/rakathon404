@@ -1,10 +1,10 @@
 import os
-from parsers.utils import readFile, parseHeader
+from parsers.utils import readFile, parseHeader, pathTo
 from parsers.User import User
 import re
 import regex as rx
 
-BASE_PATH = os.getcwd() + "/data/DATA/PAC/AMBULATNÍ ZPRÁVA"
+BASE_PATH = pathTo("data", "DATA", "PAC", "AMBULATNÍ ZPRÁVA")
 
 MAX_DOC_LENGTH = 100 # max(enumerate([len(u.doctor) for u in parsedUsers]), key=lambda x: x[1])[0]
 
@@ -73,10 +73,10 @@ def parse():
     """
     users: list[User] = []
     for year in [2023, 2024]:
-        dir = BASE_PATH + f"/{year}/"
+        dir = BASE_PATH / f"{year}"
         for file in os.listdir(dir):
             print("Parsing", file)
-            data = readFile(dir + file)
+            data = readFile(dir / file)
             parsed = parseFile(data, file)
             users.extend(parsed)
 
