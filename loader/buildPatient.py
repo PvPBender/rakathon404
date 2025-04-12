@@ -13,7 +13,8 @@ from model.patientTemplateModuleA import MA1
 
 def build_patient(cispac_value: str) -> PacientTemplate:
     patient = PacientTemplate()
-    patient.M_1.M_1_1.M_1_1_4.append(IdentifikatorPacienta(typ="cispac", identifikator=str(cispac_value)))
+    # patient.M_1.M_1_1.M_1_1_4.append(IdentifikatorPacienta(typ="cispac", identifikator=str(cispac_value)))
+    patient.M_1.M_1_1.M_1_1_4 = cispac_value
     return patient
 
 

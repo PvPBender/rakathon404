@@ -11,7 +11,7 @@ import logging
 from datetime import datetime
 
 def main():
-    cispac_value = int("YOUR_CISPAC_VALUE")
+    cispac_value = int("1")
 
     try:
         connection = connect()

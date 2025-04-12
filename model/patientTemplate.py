@@ -24,7 +24,7 @@ class IdentifikatorPacienta:
 class M_1_1:  # Identifikace pacienta
     M_1_1_1: List[str] = field(default_factory=list)  # Křestní jméno – Povinné, 1..*
     M_1_1_2: List[str] = field(default_factory=list)  # Příjmení – Povinné, 1..*
-    M_1_1_4: List['IdentifikatorPacienta'] = field(default_factory=list)  # Identifikátor pacienta
+    M_1_1_4: int = 0 # Identifikátor pacienta
     M_1_1_6: str = ""  # Úřední pohlaví – can set a default like "U" or leave empty
     M_1_1_3: Optional[str] = None  # Datum narození – Optional
     M_1_1_5: List[str] = field(default_factory=list)  # Státní občanství
@@ -55,9 +55,8 @@ class M_1:  # Hlavička dokumentu
 @dataclass
 class PacientTemplate:
     M_1: 'M_1' = field(default_factory=M_1) # Hlavička dokumentu – 1..1
+    # M_A: MA                     # Pacient – 1..1
+    # M_B1: MB1                   # Pacient – 1..1
+    # M_B2: Optional[List[MB2]] = field(default_factory=list)
+    # M_C: Optional[List[MC]] = field(default_factory=list)
 
-
-#     M_A: MA                     # Pacient – 1..1
-#     M_B1: MB1                   # Pacient – 1..1
-# M_B2: Optional[List[MB2]] = field(default_factory=list)
-# M_C: Optional[List[MC]] = field(default_factory=list)
