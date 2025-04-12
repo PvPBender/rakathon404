@@ -1,9 +1,9 @@
 import pandas as pd
 from model.patientTemplate import PacientTemplate
-from db.tables.LabHem import LabHem
+from db.tables.HemLab import HemLab
 import math
 
-def handleHem(hemlab_entry: list[LabHem], patient: PacientTemplate):
+def handleHem(hemlab_entry: list[HemLab], patient: PacientTemplate):
     patient.m_1.m_1_1.m_1_1_6 = hemlab_entry.sex
 
     last_measurement_date = patient.m_a.m_a_2.m_a_2_1

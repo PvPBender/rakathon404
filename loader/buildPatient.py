@@ -24,8 +24,8 @@ def loadDataToPatient(patient: PacientTemplate, pacient_data: Pacient):
     for biolab_entry in pacient_data.lab_bio_entries:
         handleBio(biolab_entry, patient)
 
-    for labhem_entry in pacient_data.lab_hem_entries:
-        handleHem(labhem_entry, patient)
+    for hemlab_entry in pacient_data.lab_hem_entries:
+        handleHem(hemlab_entry, patient)
 
     for report_entry in pacient_data.report_entries:
         handleReport(report_entry, patient)

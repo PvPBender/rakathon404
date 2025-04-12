@@ -32,7 +32,7 @@ def main():
             if pacient_data:
                 logging.info(f"Patolog entries: {pacient_data.pat_entries}")
                 logging.info(f"BioLab entries: {pacient_data.lab_bio_entries}")
-                logging.info(f"LabHem entries: {pacient_data.lab_hem_entries}")
+                logging.info(f"HemLab entries: {pacient_data.lab_hem_entries}")
                 logging.info(f"Report entries: {pacient_data.report_entries}")
                 logging.info(f"Rengen entries: {pacient_data.rengen_entries}")
 

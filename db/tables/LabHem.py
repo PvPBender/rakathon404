@@ -1,4 +1,4 @@
-# LabHem.py
+# HemLab.py
 from datetime import datetime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Text, Integer, Float, DateTime, ForeignKey, select
@@ -8,8 +8,8 @@ import pandas as pd
 from sqlalchemy.orm import Session
 from db.database import connect
 
-class LabHem(Base):
-    __tablename__ = "LabHem"
+class HemLab(Base):
+    __tablename__ = "HemLab"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, unique=True)  # "ID" as ID
     cispac: Mapped[int] = mapped_column(Integer, ForeignKey('Pacient.id'))  # "CISPAC" as ID
@@ -41,7 +41,7 @@ class LabHem(Base):
 
     def __repr__(self) -> str:
         return (
-            f"LabHem("
+            f"HemLab("
             f"cispac={self.cispac!r}, ordnum={self.ordnum!r}, daynum={self.daynum!r}, "
             f"orddate={self.orddate!r}, sex={self.sex!r}, departm={self.departm!r}, "
             f"dg1={self.dg1!r}, dg2={self.dg2!r}, dg3={self.dg3!r}, dg4={self.dg4!r}, dg5={self.dg5!r}, "
@@ -97,7 +97,7 @@ class LabHem(Base):
                 session.commit()
 
                 total_inserted += len(entries)
-                print(f"Inserted {total_inserted}/{total_rows} rows into LabHem. ({len(entries)} inserted in this chunk)")
+                print(f"Inserted {total_inserted}/{total_rows} rows into HemLab. ({len(entries)} inserted in this chunk)")
             except Exception as e:
                 session.rollback()
                 print("Error inserting data:", e)
@@ -121,7 +121,7 @@ class LabHem(Base):
         # try:
         #     session.bulk_save_objects(entries)
         #     session.commit()
-        #     print(f"Inserted {len(entries)}/{len(entries)} rows into LabHem. (unique/all)")
+        #     print(f"Inserted {len(entries)}/{len(entries)} rows into HemLab. (unique/all)")
         # except Exception as e:
         #     session.rollback()
         #     print("Error inserting data:", e)

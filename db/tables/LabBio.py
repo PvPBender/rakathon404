@@ -96,7 +96,7 @@ class BioLab(Base):
                 session.commit()
 
                 total_inserted += len(entries)
-                print(f"Inserted {total_inserted}/{total_rows} rows into LabHem. ({len(entries)} inserted in this chunk)")
+                print(f"Inserted {total_inserted}/{total_rows} rows into HemLab. ({len(entries)} inserted in this chunk)")
             except Exception as e:
                 session.rollback()
                 print("Error inserting data:", e)
