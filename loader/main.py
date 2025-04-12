@@ -6,7 +6,7 @@ from db.database import connect
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import joinedload
 from sqlalchemy.future import select
-from db.tables.Patient import Pacient
+from db.tables.Pacient import Pacient
 import logging
 from datetime import datetime
 

@@ -1,7 +1,7 @@
 import pandas as pd
 from model.patientTemplate import PacientTemplate, IdentifikatorPacienta
 
-from db.tables.Patient import Pacient
+from db.tables.Pacient import Pacient
 from loader.handlePat import handlePat
 from loader.handleBio import handleBio
 from loader.handleHem import handleHem
