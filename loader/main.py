@@ -28,7 +28,8 @@ def load_filtered(connection, table_name, column_name, cispac_value):
 
 
 def main():
-    cispac_value = "YOUR_CISPAC_VALUE" 
+    
+    cispac_value = int("YOUR_CISPAC_VALUE")
 
     try:
         connection = connect()
@@ -49,11 +50,11 @@ def main():
             pacient = session.execute(stmt).scalar_one_or_none()
 
             if pacient:
-                logging.info(pacient)
-                logging.info("Patolog entries:", pacient.pat_entries)
-                logging.info("BioLab entries:", pacient.lab_bio_entries)
-                logging.info("LabHem entries:", pacient.lab_hem_entries)
-                logging.info("Report entries:", pacient.report_entries)
+                logging.info(f"Patolog entries: {pacient.pat_entries}")
+                logging.info(f"BioLab entries: {pacient.lab_bio_entries}")
+                logging.info(f"LabHem entries: {pacient.lab_hem_entries}")
+                logging.info(f"Report entries: {pacient.report_entries}")
+
 
             patient = build_patient(cispac_value)
 
