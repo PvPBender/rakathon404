@@ -1,6 +1,7 @@
 import pandas as pd
-import numpy as np
 import logging
+import os
+import numpy as np
 from pathlib import Path
 from parsers.VYK.add_typ_lecby import annotate_vykony_with_names
 
@@ -124,31 +125,30 @@ def drop_empty_columns(df, name):
 
 
 # === main ===
-def parse() -> list[any]:
-    """
-    Parses all files that are for this parser and returns a list of parsed data
-    It should use parseFile to parse each file to avoid code duplication
-    """
-    df_vykony_all = pd.DataFrame()
-    df_material_all = pd.DataFrame()
 
-    for year in [23, 24]:
-        df_vykony, df_material = load_and_prepare_data(year)
+df_vykony_23, df_material_23 = load_and_prepare_data(23)
+df_vykony_24, df_material_24 = load_and_prepare_data(24)
 
-        df_vykony = drop_empty_columns(df_vykony, f"vykony_{year}")
-        df_material = drop_empty_columns(df_material, f"material_{year}")
+df_vykony_23 = drop_empty_columns(df_vykony_23, "vykony_23")
+df_vykony_24 = drop_empty_columns(df_vykony_24, "vykony_24")
+df_material_23 = drop_empty_columns(df_material_23, "material_23")
+df_material_24 = drop_empty_columns(df_material_24, "material_24")
 
-        df_vykony_all = pd.concat([df_vykony_all, df_vykony], ignore_index=True)
-        df_material_all = pd.concat([df_material_all, df_material], ignore_index=True)
+df_vykony_all = pd.concat([df_vykony_23, df_vykony_24], ignore_index=True)
+df_material_all = pd.concat([df_material_23, df_material_24],
+                            ignore_index=True)
 
-    
-    df_vykony_annotated = annotate_vykony_with_names(
-        vykony_csv_or_df=df_vykony_all,
-        kod_ciselnik = "vykony_kody_nazvy.csv",
-        output_csv = "vykony_annotated.csv"
-    )
-    return df_vykony_annotated
-    
+
+
+df_vykony_annotated = annotate_vykony_with_names(
+    vykony_csv_or_df=df_vykony_all,
+    kod_ciselnik="vykony_kody_nazvy.csv",
+    output_csv="vykony_annotated.csv"
+)
+
+file_path = 'material_all.csv'
+df_material_all.to_csv(file_path, index=False)
+
 
 
 
