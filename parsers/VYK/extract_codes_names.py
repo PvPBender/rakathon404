@@ -1,7 +1,7 @@
 import pandas as pd
 import logging
-import sys
 import os
+import sys
 from parsers.utils import pathTo
 
 logging.basicConfig(

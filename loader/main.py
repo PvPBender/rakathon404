@@ -41,7 +41,7 @@ def main():
                 logging.info(f"Rengen entries: {pacient_data.rengen_entries}")
 
             patient = loadDataToPatient(patient, pacient_data)
-            
+
         savePatient(f"patient_{cispac_value}.json", patient)
 
     except SQLAlchemyError as e:
