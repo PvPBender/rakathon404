@@ -53,7 +53,7 @@ def parseReport(msg: str) -> User | None:
 
 def parseFile(file: str, fileName: str) -> list[User]:
     """
-    Parses a single file of reports
+    Parses a single file of reports and returns a list of parsed data
     """
     [_, *msgs] = re.split(r"^===\s", file, flags=re.MULTILINE)
     users: list[User] = []
@@ -66,6 +66,10 @@ def parseFile(file: str, fileName: str) -> list[User]:
 
 
 def parse():
+    """
+    Parses all files that are for this parser and returns a list of parsed data
+    It should use parseFile to parse each file to avoid code duplication
+    """
     users: list[User] = []
     for year in [2023, 2024]:
         dir = BASE_PATH + f"/{year}/"

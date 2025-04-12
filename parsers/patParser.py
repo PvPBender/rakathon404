@@ -73,6 +73,9 @@ def parse_csv_char_by_char(data, expected_num_cols):
 
 def parse():
     """
+    Parses all files that are for this parser and returns a list of parsed data
+    It should use parseFile to parse each file to avoid code duplication
+    
     - SUBSYSTEM: Subsystem
     - ROK: Year
     - CISLOSUB: Cislo subjektu
