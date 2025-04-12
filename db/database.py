@@ -18,3 +18,14 @@ def connect() -> Tuple[Connection, Engine]:
     except Exception as e:
         print(f"Error connecting to the database: {e}")
         return None
+    
+def batch_insert(session, data, chunk_size=1000, dbName: str = "database"):
+    # Insert users in chunks to avoid memory overload
+    print(f"Batch inserting into {dbName} {len(data)} records in {chunk_size} chunks.")
+    inserted = 0
+    for i in range(0, len(data), chunk_size):
+        chunk = data[i:i + chunk_size]
+        session.add_all(chunk)  # Add all users in the chunk
+        session.commit()  # Commit the chunk to the database
+        inserted += chunk
+        print(f"Inserted {len(inserted)}/{len(data)} records into {dbName}.")

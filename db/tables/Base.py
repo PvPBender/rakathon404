@@ -32,11 +32,10 @@ class Base(DeclarativeBase):
 
         pacient_objects = [Pacient(id=value, year=None, gender=None) for value in missing_pacient_ids]
         try:
-            print("saving", len(pacient_objects))
             session.add_all(pacient_objects)
             session.commit()
             session.close()
-            print("commited")
+            print("Finished saving missing IDs")
             return ids
         except IntegrityError:
             session.rollback()
