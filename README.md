@@ -5,4 +5,4 @@ Repository for 2025's Hackathon - Rakathon
 pip install -r requirements.txt
 ```
 
-- [Data Pipeline](data/README.md)
+- [Data Pipeline](parsers/VYK/README.md)

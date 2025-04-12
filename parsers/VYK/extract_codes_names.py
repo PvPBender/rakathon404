@@ -9,12 +9,12 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("extract_codes_names.log", mode='w', encoding='utf-8')
+        logging.FileHandler("../../extract_codes_names.log", mode='w', encoding='utf-8')
     ]
 )
 
-file_path = "data/Vyhlaska.xlsx"
-output_path = "data/vykony_kody_nazvy.csv"
+file_path = "../../data/Vyhlaska.xlsx"
+output_path = "vykony_kody_nazvy.csv"
 
 # Ensure output directory exists
 os.makedirs(os.path.dirname(output_path), exist_ok=True)
