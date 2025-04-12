@@ -11,12 +11,12 @@ import logging
 from datetime import datetime
 
 def main():
-    cispac_value = int("1")
+    cispac_value = int("206")
     patient = build_patient(cispac_value)
 
     try:
-        connection = connect()
-        with Session(bind=connection) as session:
+        connection, engine = connect()
+        with Session(bind=engine) as session:
             stmt = (
                 select(Pacient)
                 .where(Pacient.id == cispac_value)
@@ -25,11 +25,11 @@ def main():
                     joinedload(Pacient.lab_bio_entries),
                     joinedload(Pacient.lab_hem_entries),
                     joinedload(Pacient.report_entries),
-                    joinedload(Paceint.r)
+                    joinedload(Pacient.rengen_entries)
                 )
             )
 
-            pacient_data = session.execute(stmt).scalar_one_or_none()
+            pacient_data = session.execute(stmt).unique().scalar_one_or_none()
 
             if pacient_data:
                 logging.info(f"Patolog entries: {pacient_data.pat_entries}")

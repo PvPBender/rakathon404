@@ -19,6 +19,11 @@ def build_patient(cispac_value: str) -> PacientTemplate:
 
 
 def loadDataToPatient(patient: PacientTemplate, pacient_data: Pacient):
+    if not pacient_data:
+        logging.error(f"Pacient data not found for {patient.M_1.M_1_1.M_1_1_4}")
+        return patient
+    
+
     for pat_entry in pacient_data.pat_entries:
         handlePat(pat_entry, patient)
 
