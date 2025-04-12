@@ -8,6 +8,16 @@ BASE_PATH = pathTo('data','DATA','PAT')
 
 NUM_COLS = 22  # We expect 22 columns => 21 commas
 
+def clean_datetime_columns(df: pd.DataFrame, datetime_columns: list) -> pd.DataFrame:
+    """
+    Cleans datetime columns by ensuring the correct datetime format for MySQL.
+    """
+    for col in datetime_columns:
+        if col in df.columns:
+            # Convert to datetime and format as 'YYYY-MM-DD HH:MM:SS'
+            df[col] = pd.to_datetime(df[col], errors='coerce').dt.strftime('%Y-%m-%d %H:%M:%S')
+    return df
+
 def parse_csv_char_by_char(data, expected_num_cols):
     rows = []
     current_row = []
@@ -127,6 +137,11 @@ def parseFile(file: str, fileName: str | None):
     df = pd.DataFrame(records, columns=columns)
     df = df.replace(r'[\r\n]+', ' ', regex=True)
 
+    print("Cleaning date time columns...")
+    datetime_columns = ['DATUM', 'DATUMVYSL']
+    df = clean_datetime_columns(df, datetime_columns)
+
+    
     if "TEXT" in df.columns:
         df["TEXT"] = df["TEXT"].str.replace(r'[\r\n\u2028\u2029]+', ' ', regex=True)
         df["TEXT"] = df["TEXT"].str.replace(r'[\r\n\u2028\u2029\x00-\x1F\x7F-\x9F\t]+', ' ', regex=True)
