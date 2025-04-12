@@ -1,7 +1,7 @@
 from db.tables.Base import Base
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Enum
+from sqlalchemy import Enum, Text
 import enum
 
 class Gender(enum.Enum):
@@ -11,11 +11,16 @@ class Gender(enum.Enum):
 
 
 class Pacient(Base):
-    __tablename__ = "pacient"
+    __tablename__ = "Pacient"
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
     year: Mapped[int]
     gender: Mapped[Gender] = mapped_column(Enum(Gender))
+
+    pat_entries: Mapped[list["Patolog"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    lab_bio_entries: Mapped[list["BioLab"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    lab_hem_entries: Mapped[list["LabHem"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
+    report_entries: Mapped[list["Report"]] = relationship(back_populates="pacient", cascade="all, delete-orphan")
 
 
     def __repr__(self) -> str:
