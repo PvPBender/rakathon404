@@ -54,28 +54,7 @@ def detect_lateralita(*lokality: str) -> str:
 def analyze_text_with_gpt(text: str) -> dict:
     system_msg = """
     Tvým úkolem je z patologického nebo klinického textu vytěžit klíčové onkologické parametry dle Modulu B1 ÚZIS.
-    Odpověz výhradně ve formátu JSON.
-
-    Pole:
-    - klasifikace_nadoru
-    - klinicka_T, klinicka_N, klinicka_M
-    - patologicka_T, patologicka_N, patologicka_M
-    - biologicke_chovani
-    - diagnosticka_skupina
-    - relaps_datum
-    - relaps_typ
-
-    Rozšířená pole:
-    - morfologie_slovne
-    - typ_morfologie (např. biopsie, cytologie, pitva, jiný)
-    - grading (např. G1, G2, G3)
-    - stadium (např. I, II, III, IV)
-    - metastazy_lokalizace (seznam míst: např. [\"játra\", \"plíce\"])
-    - lymfaticka_invaze (např. L0, L1, LX)
-    - zilni_invaze (např. V0, V1, V2, VX)
-    - rezidualni_nador_R (např. R0, R1, R2, RX)
-
-    Dbej na přesnost kódování dle pravidel TNM a ÚZIS. Pokud údej nelze ze spisu určit, napiš `null`.
+    Odpověz výhradně ve formátu JSON. ...
     """
     try:
         response = client.chat.completions.create(
@@ -86,10 +65,35 @@ def analyze_text_with_gpt(text: str) -> dict:
                 {"role": "user", "content": text}
             ]
         )
-        return json.loads(response.choices[0].message.content)
+
+        content = response.choices[0].message.content
+
+        if not content or not content.strip():
+            logging.warning("GPT response was empty or whitespace only.")
+            return {}
+
+        content = content.strip()
+
+        # Odstraň vše před prvním `{`, pokud GPT omylem vygeneroval prefix
+        if not content.startswith("{"):
+            idx = content.find("{")
+            if idx != -1:
+                content = content[idx:]
+
+        logging.debug(f"GPT response content:\n{content}")
+
+        return json.loads(content)
+
+    except json.JSONDecodeError as jde:
+        logging.error(f"JSON decoding failed: {jde}")
+        logging.debug(f"Raw content that caused error: {repr(content)}")
+        return {}
+
     except Exception as e:
         logging.warning(f"OpenAI GPT extraction failed: {e}")
         return {}
+
+
 
 
 MB2_MAPPING = {
@@ -161,78 +165,77 @@ def handlePat(pat_entry: Patolog, patient: PacientTemplate):
             return value.replace(typ, "").replace("p", "").strip()
         return ""
 
-    # ---- GPT – volný text ----
+
+    def assign_if_str(target, attr_name, value):
+        if isinstance(value, str):
+            setattr(target, attr_name, value)
+
+
+    def assign_if_list(target, attr_name, value):
+        if isinstance(value, list):
+            setattr(target, attr_name, value)
+
+        # ---- GPT – volný text ----
+
+
     fulltext = "\n".join(filter(None, [pat_entry.klindg, pat_entry.text]))
     if fulltext.strip():
         gpt_output = analyze_text_with_gpt(fulltext)
         logging.info(
             f"GPT návrh: {json.dumps(gpt_output, indent=2, ensure_ascii=False)}")
 
+        if not isinstance(gpt_output, dict):
+            logging.warning("GPT output není slovník.")
+            return patient
 
-        if isinstance(gpt_output.get("klasifikace_nadoru"), str):
-            patient.M_B1.M_B_1.M_B_1_2_1 = gpt_output["klasifikace_nadoru"]
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_1",
+                      gpt_output.get("klasifikace_nadoru"))
 
         if isinstance(gpt_output.get("klinicka_T"), str):
-            val = clean_tnm(gpt_output["klinicka_T"], "T")
-            patient.M_B1.M_B_1.M_B_1_3_1_1 = TNM_CT(value=val)
-
+            patient.M_B1.M_B_1.M_B_1_3_1_1 = TNM_CT(
+                value=clean_tnm(gpt_output["klinicka_T"], "T"))
         if isinstance(gpt_output.get("klinicka_N"), str):
-            val = clean_tnm(gpt_output["klinicka_N"], "N")
-            patient.M_B1.M_B_1.M_B_1_3_1_3 = TNM_CN(value=val)
-
+            patient.M_B1.M_B_1.M_B_1_3_1_3 = TNM_CN(
+                value=clean_tnm(gpt_output["klinicka_N"], "N"))
         if isinstance(gpt_output.get("klinicka_M"), str):
-            val = clean_tnm(gpt_output["klinicka_M"], "M")
-            patient.M_B1.M_B_1.M_B_1_3_1_4 = TNM_CM(value=val)
+            patient.M_B1.M_B_1.M_B_1_3_1_4 = TNM_CM(
+                value=clean_tnm(gpt_output["klinicka_M"], "M"))
 
         if isinstance(gpt_output.get("patologicka_T"), str):
-            val = clean_tnm(gpt_output["patologicka_T"], "T")
-            patient.M_B1.M_B_1.M_B_1_3_2_4 = TNM_CT(value=val)
-
+            patient.M_B1.M_B_1.M_B_1_3_2_4 = TNM_CT(
+                value=clean_tnm(gpt_output["patologicka_T"], "T"))
         if isinstance(gpt_output.get("patologicka_N"), str):
-            val = clean_tnm(gpt_output["patologicka_N"], "N")
-            patient.M_B1.M_B_1.M_B_1_3_2_6 = TNM_CN(value=val)
-
+            patient.M_B1.M_B_1.M_B_1_3_2_6 = TNM_CN(
+                value=clean_tnm(gpt_output["patologicka_N"], "N"))
         if isinstance(gpt_output.get("patologicka_M"), str):
-            val = clean_tnm(gpt_output["patologicka_M"], "M")
-            patient.M_B1.M_B_1.M_B_1_3_2_12 = TNM_CM(value=val)
+            patient.M_B1.M_B_1.M_B_1_3_2_12 = TNM_CM(
+                value=clean_tnm(gpt_output["patologicka_M"], "M"))
 
         val = gpt_output.get("biologicke_chovani")
         if val in BiologickeChovani._value2member_map_:
             patient.M_B1.M_B_1.M_B_1_2_11 = BiologickeChovani(val)
-        else:
+        elif val is not None:
             logging.warning(f"Neplatné biologické chování: {val}")
 
-        if isinstance(gpt_output.get("diagnosticka_skupina"), str):
-            patient.M_B1.M_B_1.M_B_1_4_1 = gpt_output["diagnosticka_skupina"]
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_4_1",
+                      gpt_output.get("diagnosticka_skupina"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2",
+                      gpt_output.get("relaps_datum"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2_1",
+                      gpt_output.get("relaps_typ"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_6",
+                      gpt_output.get("morfologie_slovne"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_7",
+                      gpt_output.get("typ_morfologie"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_12", gpt_output.get("grading"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_3", gpt_output.get("stadium"))
+        assign_if_list(patient.M_B1.M_B_1, "M_B_1_3_4",
+                       gpt_output.get("metastazy_lokalizace"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_5",
+                      gpt_output.get("lymfaticka_invaze"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_6",
+                      gpt_output.get("zilni_invaze"))
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_8",
+                      gpt_output.get("rezidualni_nador_R"))
 
-        if isinstance(gpt_output.get("relaps_datum"), str):
-            patient.M_B1.M_B_1.M_B_3_2_2 = gpt_output["relaps_datum"]
-
-        if isinstance(gpt_output.get("relaps_typ"), str):
-            patient.M_B1.M_B_1.M_B_3_2_2_1 = gpt_output["relaps_typ"]
-
-        if isinstance(gpt_output.get("morfologie_slovne"), str):
-            patient.M_B1.M_B_1.M_B_1_2_6 = gpt_output["morfologie_slovne"]
-
-        if isinstance(gpt_output.get("typ_morfologie"), str):
-            patient.M_B1.M_B_1.M_B_1_2_7 = gpt_output["typ_morfologie"]
-
-        if isinstance(gpt_output.get("grading"), str):
-            patient.M_B1.M_B_1.M_B_1_2_12 = gpt_output["grading"]
-
-        if isinstance(gpt_output.get("stadium"), str):
-            patient.M_B1.M_B_1.M_B_1_3_3 = gpt_output["stadium"]
-
-        if isinstance(gpt_output.get("metastazy_lokalizace"), list):
-            patient.M_B1.M_B_1.M_B_1_3_4 = gpt_output["metastazy_lokalizace"]
-
-        if isinstance(gpt_output.get("lymfaticka_invaze"), str):
-            patient.M_B1.M_B_1.M_B_1_3_5 = gpt_output["lymfaticka_invaze"]
-
-        if isinstance(gpt_output.get("zilni_invaze"), str):
-            patient.M_B1.M_B_1.M_B_1_3_6 = gpt_output["zilni_invaze"]
-
-        if isinstance(gpt_output.get("rezidualni_nador_R"), str):
-            patient.M_B1.M_B_1.M_B_1_3_8 = gpt_output["rezidualni_nador_R"]
-
-    return patient
+        return patient
