@@ -111,8 +111,8 @@ from pathlib import Path
 import json
 
 TEAM = [
-    "Bára Kindlová",
-    "Dalibor Trampota",
+    "Bára",
+    "Dalibor",
     "Honza",
     "Daniij"
 ]
