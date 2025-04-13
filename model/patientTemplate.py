@@ -52,6 +52,6 @@ class M_1:  # Hlavička dokumentu
 class PacientTemplate:
     M_1: "M_1" = field(default_factory=M_1)  # Hlavička dokumentu – 1..1
     M_A: "MA" = field(default_factory=MA)               # Pacient – 1..1
-    M_B1: "MB1" = field(default_factory=MB1)                      # Pacient – 1..1
-    M_B2: Optional[List["MB2"]] = field(default_factory=list)  # Optional list of MB2
+    M_B_1: "MB1" = field(default_factory=MB1)                      # Pacient – 1..1
+    M_B_2: Optional[List["MB_"]] = field(default_factory=list)  # Optional list of MB2
     M_C: Optional[List["MC"]] = field(default_factory=list)    # Optional list of MC
