@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy.exc import SQLAlchemyError
 from loader.buildPatient import build_patient, loadDataToPatient
-from model.seriliaziePatient import savePatient
+from model.serializePacient import savePacient
 from db.database import connect
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import joinedload
@@ -43,7 +43,7 @@ def main():
 
             patient = loadDataToPatient(patient, pacient_data)
             
-        savePatient(pathTo("loader", "reports", f"patient_{cispac_value}.json"), patient)
+        savePacient(f"patient_{cispac_value}.json", patient)
 
     except SQLAlchemyError as e:
         print(f"Error: {e}")
