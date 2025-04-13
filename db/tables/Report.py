@@ -25,7 +25,7 @@ class Report(Base):
     pacient: Mapped[list["Pacient"]] = relationship(back_populates="report_entries", cascade="all")
 
     def __repr__(self) -> str:
-        return f"Report(ID={self.id!r}, PacID={self.cispac:r}, Type={self.type!r}, Body={(self.body[:20] + "...")!r})"
+        return f"Report(ID={self.id!r}, PacID={self.cispac!r}, Type={self.type!r}, Body={(self.body[:20] + "...")!r})"
     
     @classmethod
     def insert(cls, reports: list, reportType: ReportType):
