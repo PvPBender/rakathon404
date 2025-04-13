@@ -9,7 +9,7 @@ def savePatient(file_name: str, patient: PacientTemplate):
     patient_dict = asdict(patient)
 
     # Ensure M_B2 and M_C are included even if empty
-    patient_dict.setdefault('M_B2', [])
+    patient_dict.setdefault('M_B_2', [])
     patient_dict.setdefault('M_C', [])
 
     # Save to JSON file with datetime handling

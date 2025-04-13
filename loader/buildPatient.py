@@ -27,8 +27,8 @@ def loadDataToPatient(patient: PacientTemplate, pacient_data: Pacient):
         return patient
     
     for pat_entry in pacient_data.pat_entries:
-        print(pat_entry)
-        print(pat_entry.text)
+       # print(pat_entry)
+       # print(pat_entry.text)
         handlePat(pat_entry, patient)
 
    # for biolab_entry in pacient_data.lab_bio_entries:
