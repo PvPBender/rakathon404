@@ -1,6 +1,7 @@
 data/
 .venv
 parsers/parsed/
+loader/reports
 __pycache__
 .DS_Store
 parsers/VYK/vykony_kody_nazvy.csv

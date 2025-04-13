@@ -43,7 +43,7 @@ def main():
 
             patient = loadDataToPatient(patient, pacient_data)
             
-        savePatient(pathTo("loader", "reports" f"patient_{cispac_value}.json"), patient)
+        savePatient(pathTo("loader", "reports", f"patient_{cispac_value}.json"), patient)
 
     except SQLAlchemyError as e:
         print(f"Error: {e}")
