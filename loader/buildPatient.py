@@ -16,6 +16,7 @@ from model.patientTemplateModuleC import MC2, MC3, MC4, MC5, MC6, MC7, MC8, MC9,
 import logging
 from datetime import date
 from model.patientTemplateModuleC import MakroskopickeRezidum
+from model.patientTemplateModuleC import AnoNeUdaj
 
 
 def build_patient(cispac_value: str) -> PacientTemplate:
@@ -46,21 +47,25 @@ def build_patient(cispac_value: str) -> PacientTemplate:
 
     patient.M_C = []
 
-    # MC_1 = MC()
-    # MC_1.M_C_1 = MC1()  # Initialize MC1 instance
-    # patient.M_C.append(MC_1)
+    MC_1 = MC()
+    
+    MC_3 = MC3()
+    MC_1.M_C_3 = MC_3
+    
+    # MC_4 = MC4(
+    #     M_C_4_1=date.today(),  # Required date field
+    #     M_C_4_6=AnoNeUdaj.NE,  # Required enum field
+    #     M_C_4_7=AnoNeUdaj.NE   # Required enum field
+    # )
+    # MC_1.M_C_4 = MC_4
 
-    # MC_2 = MC()
-    # MC_2.M_C_2 = MC2()  # Initialize MC2 instance
-    # mc2_instance = MC2()  # Create MC2 instance
-    # mc2_instance.M_C_2_1 = date.today()  # Set required date field
-    # mc2_instance.M_C_2_7 = MakroskopickeRezidum.NEHODNOCENO  # Set required enum field
-    # MC_2.M_C_2 = mc2_instance
-    # patient.M_C.append(MC_2)
+    MC_5 = MC5()
+    MC_1.M_C_5 = MC_5
 
-    # MC_3 = MC()
-    # MC_3.M_C_3 = MC3()  # Initialize MC3 instance
-    # patient.M_C.append(MC_3)
+    MC_6 = MC6()
+    MC_1.M_C_6 = MC_6
+    
+    patient.M_C.append(MC_1)
 
     return patient
 
