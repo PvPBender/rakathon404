@@ -1,14 +1,11 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import Optional
 from datetime import date
-from model.types import Gender, YesNoType
+from model.types import Gender
 
 from model.patientTemplateModuleA import PacientParameters
 from model.patientTemplateModuleB1 import DiagnosisB1
 from model.patientTemplateModuleB2 import DiagnosisB2
-# from model.patientTemplateModuleC import PacientTemplateModuleC as MC
-
-# from model.patientTemplateModuleB2 import PacientTemplateModuleB2 as MB2
 # from model.patientTemplateModuleC import PacientTemplateModuleC as MC
 
 

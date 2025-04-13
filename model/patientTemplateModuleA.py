@@ -24,39 +24,37 @@ class DiseaseWithComment(BaseModel):
 
 
 class RelevantDisease(BaseModel):
-    # Non-default fields first
-    M_A_1_3_1: str = ""  # Srdce a cévy
-    M_A_1_3_2: str = ""  # Metabolické
-    M_A_1_3_3: str = ""  # Plicní
-    M_A_1_3_4: str = ""  # GIT
-    M_A_1_3_5: str = ""  # Ledviny
-    M_A_1_3_6: str = ""  # Autoimunitní
-    M_A_1_3_7: str = ""  # Závažné endokrinologické onemocnění
-    M_A_1_3_8: str = ""  # Neuropsychiatrické onemocnění
-    M_A_1_3_9: str = ""  # Gynekologické onemocnění + anamnéza
-    M_A_1_3_10: str = ""  # Závažné infekční onemocnění
-    M_A_1_3_11: YesNoType  # Orgánová transplantace		ANO/NE/údaj není k dispozici
-    M_A_1_3_11_1: List[str]  # Organy
+    cardiovascular: str = Field(default="", alias="M_A_1_3_1")
+    metabolic: str = Field(default="", alias="M_A_1_3_2")
+    pulmonary: str = Field(default="", alias="M_A_1_3_3")
+    git: str = Field(default="", alias="M_A_1_3_4")
+    renal: str = Field(default="", alias="M_A_1_3_5")
+    autoimmune: str = Field(default="", alias="M_A_1_3_6")
+    endocrinological: str = Field(default="", alias="M_A_1_3_7")
+    neuropsychiatric: str = Field(default="", alias="M_A_1_3_8")
+    gynecological: str = Field(default="", alias="M_A_1_3_9")
+    infectious: str = Field(default="", alias="M_A_1_3_10")
+    organTransplant: YesNoType = Field(alias="M_A_1_3_11")
+    transplantedOrgans: List[str] = Field(alias="M_A_1_3_11_1")
 
-    # Default fields after
-    M_A_1_3_1_1: Optional[str] = None  # Srdce a cévy - komentář
-    M_A_1_3_2_1: Optional[str] = None  # Metabolické - komentář
-    M_A_1_3_3_1: Optional[str] = None  # Plicní - komentář
-    M_A_1_3_4_1: Optional[str] = None  # GIT - komentář
-    M_A_1_3_5_1: Optional[str] = None  # Ledviny - komentář
-    M_A_1_3_6_1: Optional[str] = None  # Autoimunitní - komentář
-    M_A_1_3_7_1: Optional[str] = None  # Závažné endokrinologické onemocnění - komentář
-    M_A_1_3_8_1: Optional[str] = None  # Neuropsychiatrické onemocnění - komentář
-    M_A_1_3_9_1: Optional[str] = None  # Onemocnění / funkční stav - komentář
-    M_A_1_3_9_2: Optional[str] = None  # HPV pozitivita
-    M_A_1_3_9_3: Optional[str] = None  # Menopauza (Rok)
-    M_A_1_3_9_4: Optional[str] = None  # Hormonoterapie
-    M_A_1_3_9_5: Optional[str] = None  # Antikoncepce
-    M_A_1_3_10_1: Optional[str] = None  # Závažné infekční onemocnění - komentář
-    M_A_1_3_11_1_1: Optional[str] = None  # Jiné organy
-    M_A_1_3_11_2: Optional[str] = None  # Rok transplantace
-    M_A_1_3_11_3: Optional[str] = None  # Komentář
-    M_A_1_3_12: Optional[str] = None  # jine relevantni zdravotni nalezy
+    cardiovascularComment: Optional[str] = Field(default=None, alias="M_A_1_3_1_1")
+    metabolicComment: Optional[str] = Field(default=None, alias="M_A_1_3_2_1")
+    pulmonaryComment: Optional[str] = Field(default=None, alias="M_A_1_3_3_1")
+    gitComment: Optional[str] = Field(default=None, alias="M_A_1_3_4_1")
+    renalComment: Optional[str] = Field(default=None, alias="M_A_1_3_5_1")
+    autoimmuneComment: Optional[str] = Field(default=None, alias="M_A_1_3_6_1")
+    endocrinologicalComment: Optional[str] = Field(default=None, alias="M_A_1_3_7_1")
+    neuropsychiatricComment: Optional[str] = Field(default=None, alias="M_A_1_3_8_1")
+    gynecologicalComment: Optional[str] = Field(default=None, alias="M_A_1_3_9_1")
+    hpvStatus: Optional[str] = Field(default=None, alias="M_A_1_3_9_2")
+    menopauseYear: Optional[str] = Field(default=None, alias="M_A_1_3_9_3")
+    hormoneTherapy: Optional[str] = Field(default=None, alias="M_A_1_3_9_4")
+    contraception: Optional[str] = Field(default=None, alias="M_A_1_3_9_5")
+    infectiousComment: Optional[str] = Field(default=None, alias="M_A_1_3_10_1")
+    otherTransplantedOrgans: Optional[str] = Field(default=None, alias="M_A_1_3_11_1_1")
+    transplantYear: Optional[str] = Field(default=None, alias="M_A_1_3_11_2")
+    transplantComment: Optional[str] = Field(default=None, alias="M_A_1_3_11_3")
+    otherRelevantFindings: Optional[str] = Field(default=None, alias="M_A_1_3_12")
 
 
 # --- M.A.1.5 ---
