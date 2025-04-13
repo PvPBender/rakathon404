@@ -32,7 +32,7 @@ def main():
 
             pacient_data = session.execute(stmt).unique().scalar_one_or_none()
 
-            print(f"Pacient data: {pacient_data.pat_entries}")
+         #   print(f"Pacient data: {pacient_data.pat_entries}")
 
             if pacient_data:
                 logging.info(f"Patolog entries: {pacient_data.pat_entries}")
