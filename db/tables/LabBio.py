@@ -37,7 +37,7 @@ class BioLab(Base):
     valdescr: Mapped[str] = mapped_column(Text, nullable=True)       # VALDESCR
     machine: Mapped[str] = mapped_column(Text, nullable=True)        # MACHINE
 
-    pacient: Mapped["Pacient"] = relationship(back_populates="lab_bio_entries", cascade="all")
+    # pacient: Mapped["Pacient"] = relationship(back_populates="lab_bio_entries", cascade="all")
 
     def __repr__(self) -> str:
         return (
