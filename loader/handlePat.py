@@ -14,8 +14,16 @@ from model.patientTemplateModuleB1 import (
     Lateralita, BiologickeChovani, TNM_CT, TNM_CN, TNM_CM
 )
 
+
+logging.basicConfig(
+    level=logging.INFO,  # zobrazí i .info()
+    format='%(levelname)s:%(message)s'
+)
+
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+ai_filled_fields = []
 
 
 class BiologickeChovani(str, Enum):
@@ -52,6 +60,8 @@ def detect_lateralita(*lokality: str) -> str:
 
 
 def analyze_text_with_gpt(text: str) -> dict:
+    import re
+
     system_msg = """
     Tvým úkolem je z patologického nebo klinického textu vytěžit klíčové onkologické parametry dle Modulu B1 ÚZIS.
     Odpověz výhradně ve formátu JSON. ...
@@ -66,21 +76,24 @@ def analyze_text_with_gpt(text: str) -> dict:
             ]
         )
 
-        content = response.choices[0].message.content
-
-        if not content or not content.strip():
-            logging.warning("GPT response was empty or whitespace only.")
-            return {}
-
+        content = response.choices[0].message.content or ""
         content = content.strip()
 
-        # Odstraň vše před prvním `{`, pokud GPT omylem vygeneroval prefix
+        # 🛡 Odstraň text před prvním '{'
         if not content.startswith("{"):
             idx = content.find("{")
             if idx != -1:
                 content = content[idx:]
 
-        logging.debug(f"GPT response content:\n{content}")
+        # 🧠 Extrahuj první JSON blok pomocí regexu
+        json_matches = re.findall(r'\{(?:[^{}]|(?R))*\}', content, re.DOTALL)
+        if json_matches:
+            content = json_matches[0]
+        else:
+            logging.warning("GPT response neobsahuje validní JSON blok.")
+            return {}
+
+        logging.debug(f"GPT response content (parsed):\n{content}")
 
         return json.loads(content)
 
@@ -92,6 +105,7 @@ def analyze_text_with_gpt(text: str) -> dict:
     except Exception as e:
         logging.warning(f"OpenAI GPT extraction failed: {e}")
         return {}
+
 
 
 
@@ -117,6 +131,21 @@ def map_dg_to_mb2_class(dg_kod: str) -> Optional[str]:
 
 def handlePat(pat_entry: Patolog, patient: PacientTemplate):
     logging.info(f"Handling PAT: {pat_entry}")
+
+
+    ai_filled_fields = []
+
+    def assign_if_str(target, attr_name, value, code=None):
+        if isinstance(value, str):
+            setattr(target, attr_name, value)
+            if code:
+                ai_filled_fields.append(code)
+
+    def assign_if_list(target, attr_name, value, code=None):
+        if isinstance(value, list):
+            setattr(target, attr_name, value)
+            if code:
+                ai_filled_fields.append(code)
 
     # ---- přímé údaje ----
     # M1
@@ -166,14 +195,6 @@ def handlePat(pat_entry: Patolog, patient: PacientTemplate):
         return ""
 
 
-    def assign_if_str(target, attr_name, value):
-        if isinstance(value, str):
-            setattr(target, attr_name, value)
-
-
-    def assign_if_list(target, attr_name, value):
-        if isinstance(value, list):
-            setattr(target, attr_name, value)
 
         # ---- GPT – volný text ----
 
@@ -189,53 +210,110 @@ def handlePat(pat_entry: Patolog, patient: PacientTemplate):
             return patient
 
         assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_1",
-                      gpt_output.get("klasifikace_nadoru"))
+                      gpt_output.get("klasifikace_nadoru"), "M_B_1_2_1")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_4_1",
+                      gpt_output.get("diagnosticka_skupina"), "M_B_1_4_1")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2",
+                      gpt_output.get("relaps_datum"), "M_B_3_2_2")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2_1",
+                      gpt_output.get("relaps_typ"), "M_B_3_2_2_1")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_6",
+                      gpt_output.get("morfologie_slovne"), "M_B_1_2_6")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_7",
+                      gpt_output.get("typ_morfologie"), "M_B_1_2_7")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_12",
+                      gpt_output.get("grading"), "M_B_1_2_12")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_3",
+                      gpt_output.get("stadium"), "M_B_1_3_3")
+        assign_if_list(patient.M_B1.M_B_1, "M_B_1_3_4",
+                       gpt_output.get("metastazy_lokalizace"), "M_B_1_3_4")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_5",
+                      gpt_output.get("lymfaticka_invaze"), "M_B_1_3_5")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_6",
+                      gpt_output.get("zilni_invaze"), "M_B_1_3_6")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_8",
+                      gpt_output.get("rezidualni_nador_R"), "M_B_1_3_8")
 
+        #  Nově přidané mapování podle GPT výstupů:
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_10",
+                      gpt_output.get("Bethesda klasifikace"), "M_B_1_2_10")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_13",
+                      gpt_output.get("Diagnóza"), "M_B_1_2_13")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_5_1", gpt_output.get("Lékař"),
+                      "M_B_1_5_1")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_14",
+                      gpt_output.get("Název nálezu"), "M_B_1_2_14")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_15",
+                      gpt_output.get("Makroskopický popis"), "M_B_1_2_15")
+        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_16",
+                      gpt_output.get("Mikroskopický popis"), "M_B_1_2_16")
+
+        # Klinická T klasifikace (např. "pT2")
         if isinstance(gpt_output.get("klinicka_T"), str):
             patient.M_B1.M_B_1.M_B_1_3_1_1 = TNM_CT(
                 value=clean_tnm(gpt_output["klinicka_T"], "T"))
+            ai_filled_fields.append("M_B_1_3_1_1")
+
+        # Klinická N klasifikace
         if isinstance(gpt_output.get("klinicka_N"), str):
             patient.M_B1.M_B_1.M_B_1_3_1_3 = TNM_CN(
                 value=clean_tnm(gpt_output["klinicka_N"], "N"))
+            ai_filled_fields.append("M_B_1_3_1_3")
+
+        # Klinická M klasifikace
         if isinstance(gpt_output.get("klinicka_M"), str):
             patient.M_B1.M_B_1.M_B_1_3_1_4 = TNM_CM(
                 value=clean_tnm(gpt_output["klinicka_M"], "M"))
+            ai_filled_fields.append("M_B_1_3_1_4")
 
+        # Patologická T
         if isinstance(gpt_output.get("patologicka_T"), str):
             patient.M_B1.M_B_1.M_B_1_3_2_4 = TNM_CT(
                 value=clean_tnm(gpt_output["patologicka_T"], "T"))
+            ai_filled_fields.append("M_B_1_3_2_4")
+
+        # Patologická N
         if isinstance(gpt_output.get("patologicka_N"), str):
             patient.M_B1.M_B_1.M_B_1_3_2_6 = TNM_CN(
                 value=clean_tnm(gpt_output["patologicka_N"], "N"))
+            ai_filled_fields.append("M_B_1_3_2_6")
+
+        # Patologická M
         if isinstance(gpt_output.get("patologicka_M"), str):
             patient.M_B1.M_B_1.M_B_1_3_2_12 = TNM_CM(
                 value=clean_tnm(gpt_output["patologicka_M"], "M"))
+            ai_filled_fields.append("M_B_1_3_2_12")
 
+        # Biologické chování
         val = gpt_output.get("biologicke_chovani")
         if val in BiologickeChovani._value2member_map_:
             patient.M_B1.M_B_1.M_B_1_2_11 = BiologickeChovani(val)
+            ai_filled_fields.append("M_B_1_2_11")
         elif val is not None:
             logging.warning(f"Neplatné biologické chování: {val}")
 
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_4_1",
-                      gpt_output.get("diagnosticka_skupina"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2",
-                      gpt_output.get("relaps_datum"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2_1",
-                      gpt_output.get("relaps_typ"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_6",
-                      gpt_output.get("morfologie_slovne"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_7",
-                      gpt_output.get("typ_morfologie"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_12", gpt_output.get("grading"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_3", gpt_output.get("stadium"))
-        assign_if_list(patient.M_B1.M_B_1, "M_B_1_3_4",
-                       gpt_output.get("metastazy_lokalizace"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_5",
-                      gpt_output.get("lymfaticka_invaze"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_6",
-                      gpt_output.get("zilni_invaze"))
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_8",
-                      gpt_output.get("rezidualni_nador_R"))
+        if True:
+            os.makedirs("ai_logs", exist_ok=True)
+            ai_metadata_path = os.path.join(
+                "ai_logs",
+                f"ai_fields_{pat_entry.cislosub}_{pat_entry.rok}.json"
+            )
+
+            with open(ai_metadata_path, "w", encoding="utf-8") as f:
+                json.dump(
+                    {
+                        "cislosub": pat_entry.cislosub,
+                        "rok": pat_entry.rok,
+                        "ai_filled_fields": ai_filled_fields,
+                        "input_text": fulltext,
+                        "gpt_output": gpt_output
+                    },
+                    f,
+                    ensure_ascii=False,
+                    indent=2
+                )
+
+            logging.info(
+                f"AI-generated field metadata saved to: {ai_metadata_path}")
 
         return patient
