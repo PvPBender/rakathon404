@@ -22,8 +22,8 @@ def main():
                 .where(Pacient.id == cispac_value)
                 .options(
                     joinedload(Pacient.pat_entries),
-                    joinedload(Pacient.lab_bio_entries),
-                    joinedload(Pacient.lab_hem_entries),
+                    # joinedload(Pacient.lab_bio_entries),
+                    # joinedload(Pacient.lab_hem_entries),
                     joinedload(Pacient.report_entries),
                     joinedload(Pacient.rentgen_entries)
                 )
@@ -35,8 +35,8 @@ def main():
 
             if pacient_data:
                 logging.info(f"Patolog entries: {pacient_data.pat_entries}")
-                logging.info(f"BioLab entries: {pacient_data.lab_bio_entries}")
-                logging.info(f"HemLab entries: {pacient_data.lab_hem_entries}")
+                # logging.info(f"BioLab entries: {pacient_data.lab_bio_entries}")
+                # logging.info(f"HemLab entries: {pacient_data.lab_hem_entries}")
                 logging.info(f"Report entries: {pacient_data.report_entries}")
                 logging.info(f"Rentgen entries: {pacient_data.rentgen_entries}")
 
