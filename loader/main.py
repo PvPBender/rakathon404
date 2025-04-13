@@ -9,6 +9,7 @@ from sqlalchemy.future import select
 from db.tables.Pacient import Pacient
 import logging
 from datetime import datetime
+from parsers.utils import pathTo
 
 def main():
     cispac_value = 98332
@@ -42,7 +43,7 @@ def main():
 
             patient = loadDataToPatient(patient, pacient_data)
             
-        savePatient(f"patient_{cispac_value}.json", patient)
+        savePatient(pathTo("loader", "reports" f"patient_{cispac_value}.json"), patient)
 
     except SQLAlchemyError as e:
         print(f"Error: {e}")
