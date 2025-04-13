@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from db.database import connect
 from db.tables.Pacient import Pacient
 from loader.buildPatient import build_patient, loadDataToPatient
-from model.seriliaziePatient import savePatient
+from model.serializePacient import savePatient
 
 
 def main():

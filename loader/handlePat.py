@@ -156,13 +156,13 @@ def handlePat(pat_entry: Patolog, patient: PacientTemplate):
     patient.M_1.M_1_1.M_1_1_6 = pat_entry.pohlavi
 
     # MB1 – klasifikace a typ vzorku
-    patient.M_B1.M_B_1.M_B_1_2_1 = pat_entry.dgpat or pat_entry.dg or pat_entry.dg1
-    patient.M_B1.M_B_1.M_B_1_2_8 = pat_entry.typvzorku
+    patient.M_B_1.M_B_1.M_B_1_2_1 = pat_entry.dgpat or pat_entry.dg or pat_entry.dg1
+    patient.M_B_1.M_B_1.M_B_1_2_8 = pat_entry.typvzorku
 
     # MB1 – lateralita z lokalit
     lat_value = detect_lateralita(pat_entry.lokal1, pat_entry.lokal2,
                                   pat_entry.lokal3)
-    patient.M_B1.M_B_1.M_B_1_2_5 = lat_value
+    patient.M_B_1.M_B_1.M_B_1_2_5 = lat_value
 
     # MB2
 
@@ -176,12 +176,12 @@ def handlePat(pat_entry: Patolog, patient: PacientTemplate):
         mb2_class = globals().get(mb2_class_name)
         if mb2_class:
             # Inicializuj instanci a ulož ji
-            setattr(patient.M_B2, mb2_class_name, mb2_class())
+            setattr(patient.M_B_2, mb2_class_name, mb2_class())
 
             # Ukázka zápisu hodnoty do pole např. exprese ATRX (MB21)
             if mb2_class_name == "MB21":
                 if "ATRX pozitivní" in (pat_entry.text or "").lower():
-                    getattr(patient.M_B2, "MB21").M_B_2_1_2_4 = "pozitivní"
+                    getattr(patient.M_B_2, "MB21").M_B_2_1_2_4 = "pozitivní"
 
 
 
@@ -209,85 +209,85 @@ def handlePat(pat_entry: Patolog, patient: PacientTemplate):
             logging.warning("GPT output není slovník.")
             return patient
 
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_1",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_1",
                       gpt_output.get("klasifikace_nadoru"), "M_B_1_2_1")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_4_1",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_4_1",
                       gpt_output.get("diagnosticka_skupina"), "M_B_1_4_1")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_3_2_2",
                       gpt_output.get("relaps_datum"), "M_B_3_2_2")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_3_2_2_1",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_3_2_2_1",
                       gpt_output.get("relaps_typ"), "M_B_3_2_2_1")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_6",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_6",
                       gpt_output.get("morfologie_slovne"), "M_B_1_2_6")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_7",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_7",
                       gpt_output.get("typ_morfologie"), "M_B_1_2_7")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_12",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_12",
                       gpt_output.get("grading"), "M_B_1_2_12")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_3",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_3_3",
                       gpt_output.get("stadium"), "M_B_1_3_3")
-        assign_if_list(patient.M_B1.M_B_1, "M_B_1_3_4",
+        assign_if_list(patient.M_B_1.M_B_1, "M_B_1_3_4",
                        gpt_output.get("metastazy_lokalizace"), "M_B_1_3_4")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_5",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_3_5",
                       gpt_output.get("lymfaticka_invaze"), "M_B_1_3_5")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_6",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_3_6",
                       gpt_output.get("zilni_invaze"), "M_B_1_3_6")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_3_8",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_3_8",
                       gpt_output.get("rezidualni_nador_R"), "M_B_1_3_8")
 
         #  Nově přidané mapování podle GPT výstupů:
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_10",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_10",
                       gpt_output.get("Bethesda klasifikace"), "M_B_1_2_10")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_13",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_13",
                       gpt_output.get("Diagnóza"), "M_B_1_2_13")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_5_1", gpt_output.get("Lékař"),
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_5_1", gpt_output.get("Lékař"),
                       "M_B_1_5_1")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_14",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_14",
                       gpt_output.get("Název nálezu"), "M_B_1_2_14")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_15",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_15",
                       gpt_output.get("Makroskopický popis"), "M_B_1_2_15")
-        assign_if_str(patient.M_B1.M_B_1, "M_B_1_2_16",
+        assign_if_str(patient.M_B_1.M_B_1, "M_B_1_2_16",
                       gpt_output.get("Mikroskopický popis"), "M_B_1_2_16")
 
         # Klinická T klasifikace (např. "pT2")
         if isinstance(gpt_output.get("klinicka_T"), str):
-            patient.M_B1.M_B_1.M_B_1_3_1_1 = TNM_CT(
+            patient.M_B_1.M_B_1.M_B_1_3_1_1 = TNM_CT(
                 value=clean_tnm(gpt_output["klinicka_T"], "T"))
             ai_filled_fields.append("M_B_1_3_1_1")
 
         # Klinická N klasifikace
         if isinstance(gpt_output.get("klinicka_N"), str):
-            patient.M_B1.M_B_1.M_B_1_3_1_3 = TNM_CN(
+            patient.M_B_1.M_B_1.M_B_1_3_1_3 = TNM_CN(
                 value=clean_tnm(gpt_output["klinicka_N"], "N"))
             ai_filled_fields.append("M_B_1_3_1_3")
 
         # Klinická M klasifikace
         if isinstance(gpt_output.get("klinicka_M"), str):
-            patient.M_B1.M_B_1.M_B_1_3_1_4 = TNM_CM(
+            patient.M_B_1.M_B_1.M_B_1_3_1_4 = TNM_CM(
                 value=clean_tnm(gpt_output["klinicka_M"], "M"))
             ai_filled_fields.append("M_B_1_3_1_4")
 
         # Patologická T
         if isinstance(gpt_output.get("patologicka_T"), str):
-            patient.M_B1.M_B_1.M_B_1_3_2_4 = TNM_CT(
+            patient.M_B_1.M_B_1.M_B_1_3_2_4 = TNM_CT(
                 value=clean_tnm(gpt_output["patologicka_T"], "T"))
             ai_filled_fields.append("M_B_1_3_2_4")
 
         # Patologická N
         if isinstance(gpt_output.get("patologicka_N"), str):
-            patient.M_B1.M_B_1.M_B_1_3_2_6 = TNM_CN(
+            patient.M_B_1.M_B_1.M_B_1_3_2_6 = TNM_CN(
                 value=clean_tnm(gpt_output["patologicka_N"], "N"))
             ai_filled_fields.append("M_B_1_3_2_6")
 
         # Patologická M
         if isinstance(gpt_output.get("patologicka_M"), str):
-            patient.M_B1.M_B_1.M_B_1_3_2_12 = TNM_CM(
+            patient.M_B_1.M_B_1.M_B_1_3_2_12 = TNM_CM(
                 value=clean_tnm(gpt_output["patologicka_M"], "M"))
             ai_filled_fields.append("M_B_1_3_2_12")
 
         # Biologické chování
         val = gpt_output.get("biologicke_chovani")
         if val in BiologickeChovani._value2member_map_:
-            patient.M_B1.M_B_1.M_B_1_2_11 = BiologickeChovani(val)
+            patient.M_B_1.M_B_1.M_B_1_2_11 = BiologickeChovani(val)
             ai_filled_fields.append("M_B_1_2_11")
         elif val is not None:
             logging.warning(f"Neplatné biologické chování: {val}")
