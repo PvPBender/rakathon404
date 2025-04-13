@@ -14,8 +14,8 @@ def savePacient(file_name: str, patient: PacientTemplate):
         os.makedirs(OUTPUT_DIR)
     
     # Ensure M_B2 and M_C are included even if empty
-    if 'M_B2' not in patient_dict:
-        patient_dict['M_B2'] = []
+    if 'M_B_2' not in patient_dict:
+        patient_dict['M_B_2'] = []
         
     if 'M_C' not in patient_dict:
         patient_dict['M_C'] = []
