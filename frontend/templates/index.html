@@ -1,0 +1,227 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta charset="windows-1250"> -->
+    <title>My FastAPI Page</title>
+
+    <script>
+        const nameData = {{ name_data | tojson }};
+
+        function toggle(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle("hidden");
+        }
+
+        function onTextareaChanged(e) {
+            // console.log(e)
+            const text = e.target.value
+            const pacientIDInput = document.querySelector('input[name="pacientID"]');
+
+            const regex = /===\s*\d+\.\s*(\d+)\s*\//; // Adjust the regex pattern as needed
+            const match = text.match(regex);
+            console.log(match)
+            if (match) {
+                const pacientID = match[1]; // Extract the ID from the match
+                pacientIDInput.value = pacientID; // Set the value of the input field
+            } else {
+                pacientIDInput.value = ""; // Clear the input field if no match is found
+            }
+        }
+         // Function to handle the form submission and POST request
+        async function handleFormSubmit(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            const pacientIDInput = document.querySelector('input[name="pacientID"]');
+            const reportInput = document.querySelector('textarea[name="report"]');
+            
+            const pacientID = pacientIDInput.value;  // Extract the pacient ID from the form data
+            const report = reportInput.value;  // Extract the report from the form data
+            console.log(pacientID)
+
+            if(!pacientID) {
+                alert("Please make sure there is pacient ID in the report.\nAt the beginning of the report, there should be a line like this:\n=== 1. 1234567890 /");
+                return;
+            }
+            try {
+                // Make the POST request
+                const response = await fetch(`/api/createModel/${pacientID}`, {
+                    method: "POST",
+                    headers: { // plain text
+                        "Content-Type": "text/plain",
+                    },
+                    body: report
+                });
+
+                // Handle the response
+                const responseData = await response.json();  // Assuming response is JSON
+
+                // Now render the collapsible menus with the response data
+                const menuContainer = document.getElementById('menuContainer');
+                menuContainer.innerHTML = '';  // Clear the existing content
+
+                // Call the function to render collapsible menus with response data
+                renderCollapsibleMenus(responseData, menuContainer);
+            } catch (error) {
+                console.error("Error submitting form:", error);
+            }
+        }
+        // Recursive function to render collapsible menus
+        function renderCollapsibleMenus(data, container, level = 1) {
+            if (typeof data === "object" && !Array.isArray(data)) {
+                // Iterate through the object properties
+                for (const key in data) {
+                    const item = data[key];
+
+                    const menuItem = document.createElement('div');
+                    menuItem.classList.add("mb-2", "bg-white", "rounded", "shadow", "p-4");
+
+                    const header = document.createElement('h3');
+                    header.classList.add("font-bold", "text-blue-600", "hover:underline");
+                    header.textContent = nameData[key];
+                    header.onclick = () => toggle(key);
+                    menuItem.appendChild(header);
+
+                    const content = document.createElement('div');
+                    content.id = key;
+                    content.classList.add("ml-4", "mt-2", "hidden");
+                    
+                    content.appendChild(renderFields(item));
+
+                    menuItem.appendChild(content);
+                    container.appendChild(menuItem);
+                }
+            } else if (Array.isArray(data)) {
+                // Handle arrays
+                data.forEach((item, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add("ml-4", "mt-2");
+
+                    renderCollapsibleMenus(item, listItem, level + 1);
+                    container.appendChild(listItem);
+                });
+            } else {
+                // Handle basic values (string, number, etc.)
+                const value = document.createElement('span');
+                value.classList.add("text-gray-700");
+                value.textContent = data;
+                container.appendChild(value);
+            }
+        }
+        function renderFields(value, level = 1) {
+    const container = document.createElement('div');
+    container.classList.add(`ml-${level * 4}`);
+
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        const ul = document.createElement('ul');
+        ul.classList.add('list-none');
+
+        for (const [k, v] of Object.entries(value)) {
+            const li = document.createElement('li');
+
+            // If v is a primitive, render label and value inline
+            if (typeof v !== "object" || v === null) {
+                li.classList.add('flex', 'gap-2', 'flex-wrap');
+
+                const label = document.createElement('strong');
+                label.textContent = (nameData[k] || k) + ":";
+
+                const span = document.createElement('span');
+                span.classList.add("text-gray-700");
+                span.textContent = v ?? "";
+
+                li.appendChild(label);
+                li.appendChild(span);
+            } else {
+                // Otherwise, render nested structure
+                const label = document.createElement('strong');
+                label.textContent = (nameData[k] || k) + ":";
+
+                li.appendChild(label);
+                li.appendChild(renderFields(v, level + 1));
+            }
+
+            ul.appendChild(li);
+        }
+
+        container.appendChild(ul);
+    } else if (Array.isArray(value)) {
+        const ul = document.createElement('ul');
+        ul.classList.add('list-none');
+
+        value.forEach(item => {
+            const li = document.createElement('li');
+            li.appendChild(renderFields(item, level + 1));
+            ul.appendChild(li);
+        });
+
+        container.appendChild(ul);
+    } else {
+        // Primitive at root (shouldn't really happen)
+        const span = document.createElement('span');
+        span.classList.add("text-gray-700");
+        span.textContent = value ?? "";
+        container.appendChild(span);
+    }
+
+    return container;
+}
+
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10">
+    
+    <section class="text-center my-4">
+        <h1 class="text-4xl font-bold text-blue-600 mb-2">🚀 {{ name }}</h1>
+        <h2>Team</h2>
+        <div>
+            <ul class="list-none gap-4 flex justify-center list-disc list-inside text-left">
+                {% for member in team %}
+                    <li>{{ member }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <main>
+        <form onsubmit="handleFormSubmit(event)"  >
+            <div class="grid grid-cols-3 gap-4">
+
+                <textarea 
+                    class="w-full h-64 p-4 border border-gray-300 rounded-lg col-span-3" 
+                    placeholder="Type ambulance message here..."
+                    name="report"
+                    oninput="onTextareaChanged(event)"
+                    >
+                </textarea>
+
+                <input 
+                    type="text" 
+                    class="w-full p-4 border border-gray-300 rounded-lg col-span-2" 
+                    placeholder="Extracted pacient ID" 
+                    name="pacientID"
+                    disabled />
+
+                <button 
+                    type="submit"
+                    class="w-full p-4 bg-blue-600 text-white rounded-lg col-span-1 hover:bg-blue-700"
+                    >
+                    Submit
+                </button>
+
+                <!-- Container where the collapsible menus will be rendered -->
+                <div id="menuContainer" class="space-y-4 col-span-3 items-start mt-6">
+                    <!-- Collapsible menus will be added here -->
+                </div>
+
+            </div>
+            
+        </form>
+    </main>
+
+</body>
+</html>
