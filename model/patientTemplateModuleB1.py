@@ -4,14 +4,14 @@ from model.types import Laterality, BiologicalBehaviour, tnmCounts, tnmCM, tnmCN
 
 
 class DiagnosisB1(BaseModel):
-    diagnosisOrder: str = Field(alias="M_B_1_2_1")  # Pořadové číslo onkologické diagnózy
-    diagnosisText: str = Field(alias="M_B_1_2_3")  # Diagnóza (slovně)
-    diagnosisCode: str = Field(alias="M_B_1_2_4")  # Diagnóza – kód MKN
-    laterality: Laterality = Field(alias="M_B_1_2_5")  # Lateralita
-    topography: str = Field(alias="M_B_1_2_8")  # Topografie
-    diagnosticGroup: str = Field(alias="M_B_1_4_1")  # Výběr diagnostické skupiny
-    relapseDate: str = Field(alias="M_B_3_2_2")  # Datum relapsu/progrese
-    relapseType: str = Field(alias="M_B_3_2_2_1")  # Typ relapsu
+    diagnosisOrder: str = Field(default=None, alias="M_B_1_2_1")  # Pořadové číslo onkologické diagnózy
+    diagnosisText: str = Field(default=None, alias="M_B_1_2_3")  # Diagnóza (slovně)
+    diagnosisCode: str = Field(default=None, alias="M_B_1_2_4")  # Diagnóza – kód MKN
+    laterality: Laterality = Field(default=None, alias="M_B_1_2_5")  # Lateralita
+    topography: str = Field(default=None, alias="M_B_1_2_8")  # Topografie
+    diagnosticGroup: str = Field(default=None, alias="M_B_1_4_1")  # Výběr diagnostické skupiny
+    relapseDate: str = Field(default=None, alias="M_B_3_2_2")  # Datum relapsu/progrese
+    relapseType: str = Field(default=None, alias="M_B_3_2_2_1")  # Typ relapsu
 
     # Optional fields
     sequenceNumber: Optional[int] = Field(default=None, alias="M_B_1_1")
@@ -60,5 +60,9 @@ class DiagnosisB1(BaseModel):
 
 
 class PacientTemplateModuleB1(BaseModel):
-    diagnosisModuleB1: DiagnosisB1 = Field(alias="M_B_1")
+    diagnosisModuleB1: DiagnosisB1 = Field(default=None, alias="M_B_1")
     # diagnosisModuleB2Adult
+
+
+def emptyDiagnosisB1() -> DiagnosisB1:
+    return DiagnosisB1()

@@ -5,7 +5,7 @@ from model.types import YesNoType, Smoker, Alcohol, DrugAddiction
 # --- M.A.1.1 ---
 class TumorSyndrome(BaseModel):
     relevantTumorSyndrome: str = Field(default="", alias="M_A_1_1_1")
-    syndromeNames: List[str] = Field(alias="M_A_1_1_2")
+    syndromeNames: List[str] = Field(default=None, alias="M_A_1_1_2")
     otherSyndrome: Optional[str] = Field(default="", alias="M_A_1_1_2_1")
     comment: Optional[str] = Field(default=None, alias="M_A_1_1_3")
 
@@ -14,7 +14,7 @@ class TumorSyndrome(BaseModel):
 class OncoFamilyHistory(BaseModel):
     familialRelation: str = Field(default="", alias="M_A_1_2_1")
     cancerDiagnosisDetail: str = Field(default="", alias="M_A_1_2_2")
-    cancerICD10Codes: Optional[List[str]] = Field(alias="M_A_1_2_3")
+    cancerICD10Codes: Optional[List[str]] = Field(default=None, alias="M_A_1_2_3")
 
 
 # --- M.A.1.3 ---
@@ -34,8 +34,8 @@ class RelevantDisease(BaseModel):
     neuropsychiatric: str = Field(default="", alias="M_A_1_3_8")
     gynecological: str = Field(default="", alias="M_A_1_3_9")
     infectious: str = Field(default="", alias="M_A_1_3_10")
-    organTransplant: YesNoType = Field(alias="M_A_1_3_11")
-    transplantedOrgans: List[str] = Field(alias="M_A_1_3_11_1")
+    organTransplant: YesNoType = Field(default=None, alias="M_A_1_3_11")
+    transplantedOrgans: List[str] = Field(default=None, alias="M_A_1_3_11_1")
 
     cardiovascularComment: Optional[str] = Field(default=None, alias="M_A_1_3_1_1")
     metabolicComment: Optional[str] = Field(default=None, alias="M_A_1_3_2_1")
@@ -59,7 +59,7 @@ class RelevantDisease(BaseModel):
 
 # --- M.A.1.5 ---
 class PreviousOncologicalDisease(BaseModel):
-    hadCancer: YesNoType = Field(alias="M_A_1_5_1")
+    hadCancer: YesNoType = Field(default=None, alias="M_A_1_5_1")
     previousCancerComment: Optional[str] = Field(default=None, alias="M_A_1_5_1_1")
     diagnosisYear: Optional[str] = Field(default=None, alias="M_A_1_5_1_2")
     treatedFacility: Optional[str] = Field(default=None, alias="M_A_1_5_1_3")
@@ -68,11 +68,11 @@ class PreviousOncologicalDisease(BaseModel):
 
 # --- M.A.1.6 ---
 class OncologicalScreening(BaseModel):
-    mammography: str = Field(alias="M_A_1_6_1")
-    cervical: str = Field(alias="M_A_1_6_2")
-    colorectal: str = Field(alias="M_A_1_6_3")
-    lung: str = Field(alias="M_A_1_6_4")
-    prostate: str = Field(alias="M_A_1_6_5")
+    mammography: str = Field(default=None, alias="M_A_1_6_1")
+    cervical: str = Field(default=None, alias="M_A_1_6_2")
+    colorectal: str = Field(default=None, alias="M_A_1_6_3")
+    lung: str = Field(default=None, alias="M_A_1_6_4")
+    prostate: str = Field(default=None, alias="M_A_1_6_5")
 
     mammographyYear: Optional[str] = Field(default=None, alias="M_A_1_6_1_1")
     cervicalYear: Optional[str] = Field(default=None, alias="M_A_1_6_2_1")
@@ -84,9 +84,9 @@ class OncologicalScreening(BaseModel):
 
 # --- M.A.1.7 ---
 class Alergy(BaseModel):
-    drug: YesNoType = Field(alias="M_A_1_7_1")
-    iodine: YesNoType = Field(alias="M_A_1_7_2")
-    other: YesNoType = Field(alias="M_A_1_7_3")
+    drug: YesNoType = Field(default=None, alias="M_A_1_7_1")
+    iodine: YesNoType = Field(default=None, alias="M_A_1_7_2")
+    other: YesNoType = Field(default=None, alias="M_A_1_7_3")
 
     drugSpec: Optional[str] = Field(default=None, alias="M_A_1_7_1_1")
     iodineSpec: Optional[str] = Field(default=None, alias="M_A_1_7_2_1")
@@ -95,9 +95,9 @@ class Alergy(BaseModel):
 
 # --- M.A.1.8 ---
 class Abusus(BaseModel):
-    smoker: Smoker = Field(alias="M_A_1_8_1")
-    alcohol: Alcohol = Field(alias="M_A_1_8_2")
-    drugAddiction: DrugAddiction = Field(alias="M_A_1_8_3")
+    smoker: Smoker = Field(default=None, alias="M_A_1_8_1")
+    alcohol: Alcohol = Field(default=None, alias="M_A_1_8_2")
+    drugAddiction: DrugAddiction = Field(default=None, alias="M_A_1_8_3")
 
     cigarettesPerDay: Optional[int] = Field(default=None, alias="M_A_1_8_1_1")
     smokingYears: Optional[float] = Field(default=None, alias="M_A_1_8_1_2")
@@ -136,13 +136,13 @@ class FertilityPreservationMeasures(BaseModel):
 
 # --- M.A.1 ---
 class RelevantFactors(BaseModel):
-    tumorSyndrome: TumorSyndrome = Field(alias="M_A_1_1")
-    familyHistory: Optional[OncoFamilyHistory] = Field(alias="M_A_1_2")
-    relevantDisease: Optional[RelevantDisease] = Field(alias="M_A_1_3")
-    previousCancer: Optional[PreviousOncologicalDisease] = Field(alias="M_A_1_5")
-    screening: Optional[OncologicalScreening] = Field(alias="M_A_1_6")
-    alergy: Optional[Alergy] = Field(alias="M_A_1_7")
-    abusus: Optional[Abusus] = Field(alias="M_A_1_8")
+    tumorSyndrome: TumorSyndrome = Field(default=None, alias="M_A_1_1")
+    familyHistory: Optional[OncoFamilyHistory] = Field(default=None, alias="M_A_1_2")
+    relevantDisease: Optional[RelevantDisease] = Field(default=None, alias="M_A_1_3")
+    previousCancer: Optional[PreviousOncologicalDisease] = Field(default=None, alias="M_A_1_5")
+    screening: Optional[OncologicalScreening] = Field(default=None, alias="M_A_1_6")
+    alergy: Optional[Alergy] = Field(default=None, alias="M_A_1_7")
+    abusus: Optional[Abusus] = Field(default=None, alias="M_A_1_8")
 
 
 # --- Modul A ---
