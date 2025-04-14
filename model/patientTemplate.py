@@ -14,20 +14,20 @@ class Identifier(BaseModel):
     identifikator: str  # Identifikátor osoby
 
 
-class PacientIdentification:  # Identifikace pacienta
-    name: str = Field(alias="M.1.1.1")  # Povinné, 1..*
-    surname: str = Field(alias="M.1.1.2")  # Povinné, 1..*
-    dateOfBirth: date
-    pacIdentifier: Identifier
-    nationality: Optional[str] = None
-    sex: Gender = Field(default_factory=list) 
-    language: str = Field(default_factory=list)
+class PatientIdentification(BaseModel):  # M.1.1
+    firstName: str = Field(alias="M.1.1.1")  # Křestní jméno (First name)
+    lastName: str = Field(alias="M.1.1.2")  # Příjmení (Surname)
+    dateOfBirth: date = Field(default=None, alias="M.1.1.3")  # Datum narození (Date of Birth)
+    identifier: Identifier = Field(default=None, alias="M.1.1.4")  # Identifikátor pacienta
+    nationality: Optional[str] = Field(default=None, alias="M.1.1.5")  # Státní občanství (Citizenship)
+    gender: Optional[Gender] = Field(default=None, alias="M.1.1.6")  # Úřední pohlaví (Legal Gender)
+    language: Optional[str] = Field(default=None, alias="M.1.1.7")  # Komunikační jazyk (Communication Language)
 
 
-class HealthInsurance:  # Zdravotní pojištění
-    code: int = ""  # Kód zdravotní pojišťovny – Podmíněně povinné, 1..1
-    name: str = ""  # Název zdravotní pojišťovny – Podmíněně povinné, 1..1
-    id: str = Field(default_factory=list)  # Číslo zdravotního pojištění – Podmíněně povinné, 1..1 (0..1 dětská MDS)
+class HealthInsurance(BaseModel):  # M.1.2
+    code: int = Field(alias="M.1.2.1")  # Kód zdravotní pojišťovny
+    company: str = Field(alias="M.1.2.2")  # Název zdravotní pojišťovny
+    insuranceNumber: str = Field(alias="M.1.2.3")  # Číslo zdravotního pojištění
 
 
 class DocumentHeader:  # Hlavička dokumentu
