@@ -14,7 +14,7 @@ class Identifier(BaseModel):
     identifikator: str  # Identifikátor osoby
 
 
-class PatientIdentification(BaseModel):  # M.1.1
+class PacientIdentification(BaseModel):  # M.1.1
     firstName: str = Field(alias="M.1.1.1")  # Křestní jméno (First name)
     lastName: str = Field(alias="M.1.1.2")  # Příjmení (Surname)
     dateOfBirth: date = Field(default=None, alias="M.1.1.3")  # Datum narození (Date of Birth)
@@ -30,12 +30,12 @@ class HealthInsurance(BaseModel):  # M.1.2
     insuranceNumber: str = Field(alias="M.1.2.3")  # Číslo zdravotního pojištění
 
 
-class DocumentHeader:  # Hlavička dokumentu
+class DocumentHeader(BaseModel):  # Hlavička dokumentu
     pacientIdentification: PacientIdentification = Field(alias="M_1_1")  # Identifikace pacienta – 1..1
     healthInsurance: HealthInsurance = Field(alias="M_1_2")  # Zdravotní pojištění – 1..1
 
 
-class PacientTemplate:
+class PacientTemplate(BaseModel):
     documentHeader: DocumentHeader = Field(alias="M_1")
     pacientParameters: PacientParameters = Field(alias="M_A")
     diagnosisB1: DiagnosisB1 = Field(alias="M_B_1")
