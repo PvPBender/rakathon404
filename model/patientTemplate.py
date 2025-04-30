@@ -1,57 +1,43 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
-from model.patientTemplateModuleA import PacientTemplateModuleA as MA
-from model.patientTemplateModuleB1 import PacientTemplateModuleB1 as MB1
-from model.patientTemplateModuleB2 import PacientTemplateModuleB2 as MB2
-from model.patientTemplateModuleC import PacientTemplateModuleC as MC
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional
+from datetime import date
+from model.types import Gender
 
-# from model.patientTemplateModuleB2 import PacientTemplateModuleB2 as MB2
+from model.patientTemplateModuleA import PacientParameters, emptyPacientParameters
+from model.patientTemplateModuleB1 import DiagnosisB1, emptyDiagnosisB1
+# from model.patientTemplateModuleB2 import DiagnosisB2
 # from model.patientTemplateModuleC import PacientTemplateModuleC as MC
 
 
-@dataclass
-class AnoNeUdaje:
-    ano: str
-    ne: str
-    udaj_neni_k_dispozici: str
-
-
-@dataclass
-class IdentifikatorPacienta:
-    typ: str  # Typ identifikátoru (např. rodné číslo, pas)
+class Identifier(BaseModel):
+    typ: str  # Typ identifikátoru (např. rodné číslo, pas) TODO
     identifikator: str  # Identifikátor osoby
 
 
-@dataclass
-class M_1_1:  # Identifikace pacienta
-    M_1_1_1: List[str] = field(default_factory=list)  # Křestní jméno – Povinné, 1..*
-    M_1_1_2: List[str] = field(default_factory=list)  # Příjmení – Povinné, 1..*
-    M_1_1_4: int = 0  # Identifikátor pacienta
-    M_1_1_6: str = ""  # Úřední pohlaví – can set a default like "U" or leave empty
-    M_1_1_3: Optional[str] = None  # Datum narození – Optional
-    M_1_1_5: List[str] = field(default_factory=list)  # Státní občanství
-    M_1_1_7: List[str] = field(default_factory=list)  # Komunikační jazyk
+class PacientIdentification(BaseModel):  # M.1.1
+    firstName: str = Field(default=None, alias="M.1.1.1")  # Křestní jméno (First name)
+    lastName: str = Field(default=None, alias="M.1.1.2")  # Příjmení (Surname)
+    dateOfBirth: date = Field(default=None, alias="M.1.1.3")  # Datum narození (Date of Birth)
+    identifier: Identifier = Field(default=None, alias="M.1.1.4")  # Identifikátor pacienta
+    nationality: Optional[str] = Field(default=None, alias="M.1.1.5")  # Státní občanství (Citizenship)
+    gender: Optional[Gender] = Field(default=None, alias="M.1.1.6")  # Úřední pohlaví (Legal Gender)
+    language: Optional[str] = Field(default=None, alias="M.1.1.7")  # Komunikační jazyk (Communication Language)
 
 
-@dataclass
-class M_1_2:  # Zdravotní pojištění
-    M_1_2_1: str = ""  # Kód zdravotní pojišťovny – Podmíněně povinné, 1..1
-    M_1_2_2: str = ""  # Název zdravotní pojišťovny – Podmíněně povinné, 1..1
-    M_1_2_3: List[str] = field(
-        default_factory=list
-    )  # Číslo zdravotního pojištění – Podmíněně povinné, 1..1 (0..1 dětská MDS)
+class HealthInsurance(BaseModel):  # M.1.2
+    code: int = Field(default=None, alias="M.1.2.1")  # Kód zdravotní pojišťovny
+    company: str = Field(default=None, alias="M.1.2.2")  # Název zdravotní pojišťovny
+    insuranceNumber: str = Field(default=None, alias="M.1.2.3")  # Číslo zdravotního pojištění
 
 
-@dataclass
-class M_1:  # Hlavička dokumentu
-    M_1_1: "M_1_1" = field(default_factory=M_1_1)  # Identifikace pacienta – 1..1
-    M_1_2: "M_1_2" = field(default_factory=M_1_2)  # Zdravotní pojištění – 1..1
+class DocumentHeader(BaseModel):  # Hlavička dokumentu
+    pacientIdentification: PacientIdentification = Field(alias="M_1_1")  # Identifikace pacienta – 1..1
+    healthInsurance: HealthInsurance = Field(alias="M_1_2")  # Zdravotní pojištění – 1..1
 
 
-@dataclass
-class PacientTemplate:
-    M_1: "M_1" = field(default_factory=M_1)  # Hlavička dokumentu – 1..1
-    M_A: "MA" = field(default_factory=MA)               # Pacient – 1..1
-    M_B_1: "MB1" = field(default_factory=MB1)                      # Pacient – 1..1
-    M_B_2: Optional[List["MB2"]] = field(default_factory=list)  # Optional list of MB2
-    M_C: Optional[List["MC"]] = field(default_factory=list)    # Optional list of MC
+class PacientTemplate(BaseModel):
+    documentHeader: DocumentHeader = Field(alias="M_1")
+    pacientParameters: PacientParameters = Field(alias="M_A")
+    diagnosisB1: DiagnosisB1 = Field(alias="M_B_1")
+    # diagnosisB2: Optional[DiagnosisB2] = Field(default=None, alias="M_B_2")  # Optional list of MB2
+    # M_C: Optional[List["MC"]] = field(default_factory=list)    # Optional list of MC
